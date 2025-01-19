@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { Button } from "./ui/button";
+import { LanguageToggle } from "./LanguageToggle";
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,7 +16,7 @@ export const Navbar = () => {
             </div>
           </div>
           
-          <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
+          <div className="hidden sm:ml-6 sm:flex sm:items-center sm:space-x-8">
             <a href="#services" className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 hover:text-nexa-600">
               Services
             </a>
@@ -28,6 +29,7 @@ export const Navbar = () => {
             <a href="#faq" className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 hover:text-nexa-600">
               FAQ
             </a>
+            <LanguageToggle />
           </div>
 
           <div className="flex items-center sm:hidden">
