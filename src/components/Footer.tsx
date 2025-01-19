@@ -42,7 +42,7 @@ export const Footer = () => {
                 <span className="sr-only">LinkedIn</span>
               </a>
               <a
-                href="https://instagram.com/nexa"
+                href="https://instagram.com/nexaservices2025"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-400 hover:text-nexa-600"
