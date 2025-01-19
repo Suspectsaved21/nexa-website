@@ -2,9 +2,11 @@ import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { Button } from "./ui/button";
 import { LanguageToggle } from "./LanguageToggle";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { t } = useLanguage();
 
   return (
     <nav className="bg-white shadow-sm">
@@ -18,16 +20,16 @@ export const Navbar = () => {
           
           <div className="hidden sm:ml-6 sm:flex sm:items-center sm:space-x-8">
             <a href="#services" className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 hover:text-nexa-600">
-              Services
+              {t("nav.services")}
             </a>
             <a href="#about" className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 hover:text-nexa-600">
-              About
+              {t("nav.about")}
             </a>
             <a href="#contact" className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 hover:text-nexa-600">
-              Contact
+              {t("nav.contact")}
             </a>
             <a href="#faq" className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 hover:text-nexa-600">
-              FAQ
+              {t("nav.faq")}
             </a>
             <LanguageToggle />
           </div>
@@ -52,28 +54,28 @@ export const Navbar = () => {
               className="block pl-3 pr-4 py-2 text-base font-medium text-gray-700 hover:bg-nexa-50 hover:text-nexa-600"
               onClick={() => setIsOpen(false)}
             >
-              Services
+              {t("nav.services")}
             </a>
             <a
               href="#about"
               className="block pl-3 pr-4 py-2 text-base font-medium text-gray-700 hover:bg-nexa-50 hover:text-nexa-600"
               onClick={() => setIsOpen(false)}
             >
-              About
+              {t("nav.about")}
             </a>
             <a
               href="#contact"
               className="block pl-3 pr-4 py-2 text-base font-medium text-gray-700 hover:bg-nexa-50 hover:text-nexa-600"
               onClick={() => setIsOpen(false)}
             >
-              Contact
+              {t("nav.contact")}
             </a>
             <a
               href="#faq"
               className="block pl-3 pr-4 py-2 text-base font-medium text-gray-700 hover:bg-nexa-50 hover:text-nexa-600"
               onClick={() => setIsOpen(false)}
             >
-              FAQ
+              {t("nav.faq")}
             </a>
           </div>
         </div>
