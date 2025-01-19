@@ -48,6 +48,16 @@ export const en = {
   "about.founderStory": "The journey of Nexa began in 2024 when our founder had a vision to revolutionize the e-commerce landscape. While sitting in his living room in Flemalle, he realized there was a need for a more efficient and customer-centric approach to online shopping in the Liege region.",
   "about.founderQuote": "I believe that every business, no matter how small, deserves access to efficient e-commerce solutions. That's why we created Nexa - to bridge the gap between local businesses and digital success.",
 
+  // Founder
+  "founder.title": "Our Founder",
+  "founder.name": "Kimararungu Kenny Pierrot",
+  "founder.imageAlt": "Nexa's Founder - Kimararungu Kenny Pierrot",
+  "founder.background": "Born in Burundi and having migrated to Belgium, Kimararungu Kenny Pierrot brings a unique global perspective to the world of e-commerce and technology. His journey from East Africa to Europe has shaped his understanding of diverse markets and consumer needs.",
+  "founder.vision": "As the founder of Nexa, Kenny's vision was born in his living room in 2024, where he recognized the need for more efficient and accessible e-commerce solutions in the Liege region. His passion for problem-solving drives him to continuously innovate and improve the online shopping experience.",
+  "founder.values": "Grounded in strong Christian values, Kenny approaches business with integrity, compassion, and a commitment to serving others. These principles form the foundation of Nexa's corporate culture and guide our interactions with clients and partners.",
+  "founder.future": "With a keen eye on the future of technology, Kenny is actively involved in various tech projects that aim to revolutionize how we approach online commerce. His dedication to innovation and technological advancement ensures that Nexa stays at the forefront of e-commerce solutions.",
+  "founder.quote": "Technology should bridge gaps, not create them. At Nexa, we're committed to making e-commerce accessible to everyone while maintaining the human touch that makes business meaningful.",
+
   // Contact
   "contact.title": "Contact Us",
   "contact.subtitle": "Get in Touch",

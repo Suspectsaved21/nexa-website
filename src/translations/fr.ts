@@ -48,6 +48,16 @@ export const fr = {
   "about.founderStory": "L'aventure de Nexa a commencé en 2024 lorsque notre fondateur a eu une vision pour révolutionner le paysage du e-commerce. Assis dans son salon à Flemalle, il a réalisé qu'il y avait un besoin d'une approche plus efficace et centrée sur le client pour les achats en ligne dans la région de Liège.",
   "about.founderQuote": "Je crois que chaque entreprise, quelle que soit sa taille, mérite d'avoir accès à des solutions e-commerce efficaces. C'est pourquoi nous avons créé Nexa - pour combler le fossé entre les entreprises locales et le succès numérique.",
 
+  // Founder
+  "founder.title": "Notre Fondateur",
+  "founder.name": "Kimararungu Kenny Pierrot",
+  "founder.imageAlt": "Fondateur de Nexa - Kimararungu Kenny Pierrot",
+  "founder.background": "Né au Burundi et ayant émigré en Belgique, Kimararungu Kenny Pierrot apporte une perspective mondiale unique au monde du e-commerce et de la technologie. Son parcours de l'Afrique de l'Est à l'Europe a façonné sa compréhension des différents marchés et des besoins des consommateurs.",
+  "founder.vision": "En tant que fondateur de Nexa, la vision de Kenny est née dans son salon en 2024, où il a reconnu le besoin de solutions e-commerce plus efficaces et accessibles dans la région de Liège. Sa passion pour la résolution de problèmes le pousse à innover et améliorer continuellement l'expérience d'achat en ligne.",
+  "founder.values": "Ancré dans de fortes valeurs chrétiennes, Kenny aborde les affaires avec intégrité, compassion et un engagement à servir les autres. Ces principes forment la base de la culture d'entreprise de Nexa et guident nos interactions avec les clients et les partenaires.",
+  "founder.future": "Avec un regard tourné vers l'avenir de la technologie, Kenny est activement impliqué dans divers projets technologiques visant à révolutionner notre approche du commerce en ligne. Son dévouement à l'innovation et aux avancées technologiques garantit que Nexa reste à l'avant-garde des solutions e-commerce.",
+  "founder.quote": "La technologie devrait combler les écarts, pas en créer. Chez Nexa, nous nous engageons à rendre le e-commerce accessible à tous tout en maintenant la touche humaine qui rend les affaires significatives.",
+
   // Contact
   "contact.title": "Contactez-nous",
   "contact.subtitle": "Entrer en Contact",
