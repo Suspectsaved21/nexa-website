@@ -1,5 +1,6 @@
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Navbar } from "@/components/Navbar";
+import { LazyImage } from "@/components/LazyImage";
 
 const Founder = () => {
   const { t } = useLanguage();
@@ -19,7 +20,7 @@ const Founder = () => {
         
         <div className="prose prose-blue mx-auto lg:max-w-3xl">
           <div className="aspect-w-16 aspect-h-9 relative overflow-hidden rounded-lg mb-8">
-            <img
+            <LazyImage
               src="/lovable-uploads/c5c6c645-396c-4ebd-ad5b-237d295eb2d9.png"
               alt={t("founder.imageAlt")}
               className="object-cover w-full h-full"
