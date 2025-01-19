@@ -11,21 +11,21 @@ export const Navbar = () => {
         <div className="flex justify-between h-16">
           <div className="flex">
             <div className="flex-shrink-0 flex items-center">
-              <span className="text-2xl font-bold text-business-600">BusinessName</span>
+              <span className="text-2xl font-bold text-nexa-600">Nexa</span>
             </div>
           </div>
           
           <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-            <a href="#services" className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900">
+            <a href="#services" className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 hover:text-nexa-600">
               Services
             </a>
-            <a href="#about" className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900">
+            <a href="#about" className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 hover:text-nexa-600">
               About
             </a>
-            <a href="#contact" className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900">
+            <a href="#contact" className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 hover:text-nexa-600">
               Contact
             </a>
-            <a href="#faq" className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900">
+            <a href="#faq" className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 hover:text-nexa-600">
               FAQ
             </a>
           </div>
@@ -34,7 +34,7 @@ export const Navbar = () => {
             <Button
               variant="ghost"
               onClick={() => setIsOpen(!isOpen)}
-              className="inline-flex items-center justify-center p-2"
+              className="inline-flex items-center justify-center p-2 text-nexa-600"
             >
               {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </Button>
@@ -47,28 +47,28 @@ export const Navbar = () => {
           <div className="pt-2 pb-3 space-y-1">
             <a
               href="#services"
-              className="block pl-3 pr-4 py-2 text-base font-medium text-gray-700 hover:bg-gray-50"
+              className="block pl-3 pr-4 py-2 text-base font-medium text-gray-700 hover:bg-nexa-50 hover:text-nexa-600"
               onClick={() => setIsOpen(false)}
             >
               Services
             </a>
             <a
               href="#about"
-              className="block pl-3 pr-4 py-2 text-base font-medium text-gray-700 hover:bg-gray-50"
+              className="block pl-3 pr-4 py-2 text-base font-medium text-gray-700 hover:bg-nexa-50 hover:text-nexa-600"
               onClick={() => setIsOpen(false)}
             >
               About
             </a>
             <a
               href="#contact"
-              className="block pl-3 pr-4 py-2 text-base font-medium text-gray-700 hover:bg-gray-50"
+              className="block pl-3 pr-4 py-2 text-base font-medium text-gray-700 hover:bg-nexa-50 hover:text-nexa-600"
               onClick={() => setIsOpen(false)}
             >
               Contact
             </a>
             <a
               href="#faq"
-              className="block pl-3 pr-4 py-2 text-base font-medium text-gray-700 hover:bg-gray-50"
+              className="block pl-3 pr-4 py-2 text-base font-medium text-gray-700 hover:bg-nexa-50 hover:text-nexa-600"
               onClick={() => setIsOpen(false)}
             >
               FAQ
