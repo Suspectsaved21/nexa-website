@@ -1,12 +1,15 @@
 import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ArrowLeft } from "lucide-react";
 import { Button } from "./ui/button";
 import { LanguageToggle } from "./LanguageToggle";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { Link, useLocation } from "react-router-dom";
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { t } = useLanguage();
+  const location = useLocation();
+  const isFounderPage = location.pathname === "/founder";
 
   return (
     <nav className="bg-white shadow-sm">
@@ -14,23 +17,26 @@ export const Navbar = () => {
         <div className="flex justify-between h-16">
           <div className="flex">
             <div className="flex-shrink-0 flex items-center">
-              <span className="text-2xl font-bold text-nexa-600">Nexa</span>
+              <Link to="/" className="flex items-center gap-2 text-2xl font-bold text-nexa-600 hover:text-nexa-700">
+                {isFounderPage && <ArrowLeft className="h-5 w-5" />}
+                Nexa
+              </Link>
             </div>
           </div>
           
           <div className="hidden sm:ml-6 sm:flex sm:items-center sm:space-x-8">
-            <a href="#services" className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 hover:text-nexa-600">
+            <Link to="/" className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 hover:text-nexa-600">
               {t("nav.services")}
-            </a>
-            <a href="#about" className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 hover:text-nexa-600">
+            </Link>
+            <Link to="/" className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 hover:text-nexa-600">
               {t("nav.about")}
-            </a>
-            <a href="#contact" className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 hover:text-nexa-600">
+            </Link>
+            <Link to="/" className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 hover:text-nexa-600">
               {t("nav.contact")}
-            </a>
-            <a href="#faq" className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 hover:text-nexa-600">
+            </Link>
+            <Link to="/" className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 hover:text-nexa-600">
               {t("nav.faq")}
-            </a>
+            </Link>
             <LanguageToggle />
           </div>
 
@@ -49,34 +55,34 @@ export const Navbar = () => {
       {isOpen && (
         <div className="sm:hidden">
           <div className="pt-2 pb-3 space-y-1">
-            <a
-              href="#services"
+            <Link
+              to="/"
               className="block pl-3 pr-4 py-2 text-base font-medium text-gray-700 hover:bg-nexa-50 hover:text-nexa-600"
               onClick={() => setIsOpen(false)}
             >
               {t("nav.services")}
-            </a>
-            <a
-              href="#about"
+            </Link>
+            <Link
+              to="/"
               className="block pl-3 pr-4 py-2 text-base font-medium text-gray-700 hover:bg-nexa-50 hover:text-nexa-600"
               onClick={() => setIsOpen(false)}
             >
               {t("nav.about")}
-            </a>
-            <a
-              href="#contact"
+            </Link>
+            <Link
+              to="/"
               className="block pl-3 pr-4 py-2 text-base font-medium text-gray-700 hover:bg-nexa-50 hover:text-nexa-600"
               onClick={() => setIsOpen(false)}
             >
               {t("nav.contact")}
-            </a>
-            <a
-              href="#faq"
+            </Link>
+            <Link
+              to="/"
               className="block pl-3 pr-4 py-2 text-base font-medium text-gray-700 hover:bg-nexa-50 hover:text-nexa-600"
               onClick={() => setIsOpen(false)}
             >
               {t("nav.faq")}
-            </a>
+            </Link>
           </div>
         </div>
       )}
