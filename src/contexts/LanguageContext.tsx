@@ -1,155 +1,10 @@
 import React, { createContext, useContext, useState } from "react";
-
-type Language = "en" | "fr";
+import { translations, Language, TranslationKey } from "@/translations";
 
 type LanguageContextType = {
   language: Language;
   setLanguage: (lang: Language) => void;
   t: (key: string) => string;
-};
-
-const translations = {
-  en: {
-    // Navigation
-    "nav.services": "Services",
-    "nav.about": "About",
-    "nav.contact": "Contact",
-    "nav.faq": "FAQ",
-
-    // Hero
-    "hero.title": "Your fastest shopping",
-    "hero.subtitle": "solutions in one click",
-    "hero.description": "Experience seamless dropshipping and exceptional client satisfaction with our comprehensive business solutions.",
-    "hero.getStarted": "Get Started",
-    "hero.learnMore": "Learn More",
-
-    // Services
-    "services.title": "Services",
-    "services.subtitle": "What We Offer",
-    "services.description": "Comprehensive business solutions tailored to your needs",
-    "services.dropshipping.title": "Dropshipping Solutions",
-    "services.dropshipping.description": "Streamlined dropshipping services with reliable suppliers and fast delivery",
-    "services.satisfaction.title": "Client Satisfaction",
-    "services.satisfaction.description": "Dedicated support team ensuring 100% customer satisfaction",
-    "services.support.title": "Technical Support",
-    "services.support.description": "24/7 technical assistance at +32466255891",
-    "services.quality.title": "Quality Assurance",
-    "services.quality.description": "Rigorous quality control for all products and services",
-    "services.complaints.title": "Client Complaints",
-    "services.complaints.description": "Swift resolution of customer issues with dedicated complaint handling",
-    "services.refund.title": "Refund Policy",
-    "services.refund.description": "Hassle-free refund process with transparent policies",
-    "services.reviews.title": "Product Reviews",
-    "services.reviews.description": "Verified customer reviews and ratings for all products",
-    "services.customerReviews": "Customer Reviews",
-    "services.writeReview": "Write a Review",
-    "services.submitReview": "Submit Review",
-    "services.reviewPlaceholder": "Share your experience...",
-
-    // About
-    "about.title": "About Us",
-    "about.subtitle": "Your Business Partner",
-    "about.description": "We are committed to delivering excellence in business solutions and technical support",
-    "about.location": "Based in Flemalle, Belgium, we are proud to serve the entire Liege region with our comprehensive dropshipping and business solutions.",
-    "about.experience": "With years of experience in the industry, we understand the unique challenges businesses face in today's dynamic environment.",
-    "about.commitment": "We take pride in our Belgian roots and our commitment to supporting local businesses while providing international-standard services.",
-
-    // Founder related translations
-    "about.meetFounder": "Meet Our Founder",
-    "about.founderStoryTitle": "The Story Behind Nexa",
-    "about.founderImageAlt": "Nexa's Founder",
-    "about.founderStory": "The journey of Nexa began in 2024 when our founder had a vision to revolutionize the e-commerce landscape. While sitting in his living room in Flemalle, he realized there was a need for a more efficient and customer-centric approach to online shopping in the Liege region.",
-    "about.founderQuote": "I believe that every business, no matter how small, deserves access to efficient e-commerce solutions. That's why we created Nexa - to bridge the gap between local businesses and digital success.",
-
-    // Contact
-    "contact.title": "Contact Us",
-    "contact.subtitle": "Get in Touch",
-    "contact.name": "Your Name",
-    "contact.email": "Your Email",
-    "contact.message": "Your Message",
-    "contact.send": "Send Message",
-    "contact.support": "Technical Support",
-    "contact.office": "Office",
-    "contact.messageType": "Message Type",
-    "contact.general": "General Inquiry",
-    "contact.technical": "Technical Support",
-    "contact.complaint": "Complaint",
-
-    // FAQ
-    "faq.title": "FAQ",
-    "faq.subtitle": "Frequently Asked Questions",
-
-    // Footer
-    "footer.description": "Your trusted partner in business solutions. We provide comprehensive services to help your business grow and succeed.",
-    "footer.quickLinks": "Quick Links",
-    "footer.contact": "Contact",
-    "footer.technicalSupport": "Technical Support",
-    "footer.email": "Email",
-    "footer.location": "Location",
-    "footer.rights": "All rights reserved.",
-
-    // FAQ
-    "faq.questions.services": "What services do you offer?",
-    "faq.answers.services": "We offer a comprehensive range of business solutions including technical support, consulting, and custom solutions tailored to your needs.",
-    "faq.questions.support": "How can I get technical support?",
-    "faq.answers.support": "You can reach our technical support team 24/7 at +32466255891 or through our contact form above.",
-    "faq.questions.hours": "What are your business hours?",
-    "faq.answers.hours": "Our office is open Monday through Friday, 9:00 AM to 6:00 PM CET. However, our technical support is available 24/7.",
-    "faq.questions.solutions": "Do you offer custom solutions?",
-    "faq.answers.solutions": "Yes, we specialize in creating custom solutions tailored to your specific business needs and requirements.",
-  },
-  fr: {
-    // Navigation
-    "nav.services": "Services",
-    "nav.about": "À propos",
-    "nav.contact": "Contact",
-    "nav.faq": "FAQ",
-
-    // Hero
-    "hero.title": "Vos solutions d'achat",
-    "hero.subtitle": "les plus rapides en un clic",
-    "hero.description": "Découvrez le dropshipping sans effort et une satisfaction client exceptionnelle avec nos solutions commerciales complètes.",
-    "hero.getStarted": "Commencer",
-    "hero.learnMore": "En savoir plus",
-
-    // Services
-    "services.title": "Services",
-    "services.subtitle": "Ce que nous offrons",
-    "services.description": "Des solutions commerciales complètes adaptées à vos besoins",
-    "services.dropshipping.title": "Solutions de Dropshipping",
-    "services.dropshipping.description": "Services de dropshipping optimisés avec des fournisseurs fiables et une livraison rapide",
-    "services.satisfaction.title": "Satisfaction Client",
-    "services.satisfaction.description": "Équipe de support dédiée assurant 100% de satisfaction client",
-    "services.support.title": "Support Technique",
-    "services.support.description": "Assistance technique 24/7 au +32466255891",
-    "services.quality.title": "Assurance Qualité",
-    "services.quality.description": "Contrôle qualité rigoureux pour tous les produits et services",
-    "services.complaints.title": "Réclamations Clients",
-    "services.complaints.description": "Résolution rapide des problèmes avec gestion dédiée des réclamations",
-    "services.refund.title": "Politique de Remboursement",
-    "services.refund.description": "Processus de remboursement simple avec des politiques transparentes",
-    "services.reviews.title": "Avis Produits",
-    "services.reviews.description": "Avis et évaluations clients vérifiés pour tous les produits",
-    "services.customerReviews": "Avis Clients",
-    "services.writeReview": "Écrire un avis",
-    "services.submitReview": "Soumettre l'avis",
-    "services.reviewPlaceholder": "Partagez votre expérience...",
-
-    // About
-    "about.title": "À propos",
-    "about.subtitle": "Votre Partenaire Commercial",
-    "about.description": "Nous nous engageons à offrir l'excellence en solutions commerciales et support technique",
-    "about.location": "Basés à Flemalle, Belgique, nous sommes fiers de servir toute la région de Liège avec nos solutions complètes de dropshipping.",
-    "about.experience": "Avec des années d'expérience dans l'industrie, nous comprenons les défis uniques auxquels les entreprises font face.",
-    "about.commitment": "Nous sommes fiers de nos racines belges et de notre engagement à soutenir les entreprises locales.",
-
-    // Founder related translations
-    "about.meetFounder": "Rencontrez Notre Fondateur",
-    "about.founderStoryTitle": "L'Histoire Derrière Nexa",
-    "about.founderImageAlt": "Fondateur de Nexa",
-    "about.founderStory": "L'aventure de Nexa a commencé en 2024 lorsque notre fondateur a eu une vision pour révolutionner le paysage du e-commerce. Assis dans son salon à Flemalle, il a réalisé qu'il y avait un besoin d'une approche plus efficace et centrée sur le client pour les achats en ligne dans la région de Liège.",
-    "about.founderQuote": "Je crois que chaque entreprise, quelle que soit sa taille, mérite d'avoir accès à des solutions e-commerce efficaces. C'est pourquoi nous avons créé Nexa - pour combler le fossé entre les entreprises locales et le succès numérique.",
-  },
 };
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
@@ -158,7 +13,7 @@ export const LanguageProvider = ({ children }: { children: React.ReactNode }) =>
   const [language, setLanguage] = useState<Language>("en");
 
   const t = (key: string): string => {
-    return translations[language][key as keyof typeof translations[typeof language]] || key;
+    return translations[language][key as TranslationKey] || key;
   };
 
   return (
