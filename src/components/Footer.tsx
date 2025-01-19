@@ -1,4 +1,8 @@
+import { useLanguage } from "@/contexts/LanguageContext";
+
 export const Footer = () => {
+  const { t } = useLanguage();
+  
   return (
     <footer className="bg-white border-t">
       <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
@@ -6,52 +10,52 @@ export const Footer = () => {
           <div className="col-span-2">
             <span className="text-2xl font-bold text-nexa-600">Nexa</span>
             <p className="mt-4 text-gray-500">
-              Your trusted partner in business solutions. We provide comprehensive services to help your business grow and succeed.
+              {t("footer.description")}
             </p>
           </div>
           <div>
-            <h3 className="text-sm font-semibold text-gray-400 tracking-wider uppercase">Quick Links</h3>
+            <h3 className="text-sm font-semibold text-gray-400 tracking-wider uppercase">{t("footer.quickLinks")}</h3>
             <ul className="mt-4 space-y-4">
               <li>
                 <a href="#services" className="text-base text-gray-500 hover:text-nexa-600">
-                  Services
+                  {t("nav.services")}
                 </a>
               </li>
               <li>
                 <a href="#about" className="text-base text-gray-500 hover:text-nexa-600">
-                  About
+                  {t("nav.about")}
                 </a>
               </li>
               <li>
                 <a href="#contact" className="text-base text-gray-500 hover:text-nexa-600">
-                  Contact
+                  {t("nav.contact")}
                 </a>
               </li>
               <li>
                 <a href="#faq" className="text-base text-gray-500 hover:text-nexa-600">
-                  FAQ
+                  {t("nav.faq")}
                 </a>
               </li>
             </ul>
           </div>
           <div>
-            <h3 className="text-sm font-semibold text-gray-400 tracking-wider uppercase">Contact</h3>
+            <h3 className="text-sm font-semibold text-gray-400 tracking-wider uppercase">{t("footer.contact")}</h3>
             <ul className="mt-4 space-y-4">
               <li className="text-base text-gray-500">
-                Technical Support: +32466255891
+                {t("footer.technicalSupport")}: +32466255891
               </li>
               <li className="text-base text-gray-500">
-                Email: support@nexa.com
+                {t("footer.email")}: support@nexa.com
               </li>
               <li className="text-base text-gray-500">
-                Location: Belgium
+                {t("footer.location")}: Belgium
               </li>
             </ul>
           </div>
         </div>
         <div className="mt-8 border-t border-gray-200 pt-8">
           <p className="text-base text-gray-400 text-center">
-            © {new Date().getFullYear()} Nexa. All rights reserved.
+            © {new Date().getFullYear()} Nexa. {t("footer.rights")}
           </p>
         </div>
       </div>

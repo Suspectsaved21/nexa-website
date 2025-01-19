@@ -71,6 +71,25 @@ const translations = {
     // FAQ
     "faq.title": "FAQ",
     "faq.subtitle": "Frequently Asked Questions",
+
+    // Footer
+    "footer.description": "Your trusted partner in business solutions. We provide comprehensive services to help your business grow and succeed.",
+    "footer.quickLinks": "Quick Links",
+    "footer.contact": "Contact",
+    "footer.technicalSupport": "Technical Support",
+    "footer.email": "Email",
+    "footer.location": "Location",
+    "footer.rights": "All rights reserved.",
+
+    // FAQ
+    "faq.questions.services": "What services do you offer?",
+    "faq.answers.services": "We offer a comprehensive range of business solutions including technical support, consulting, and custom solutions tailored to your needs.",
+    "faq.questions.support": "How can I get technical support?",
+    "faq.answers.support": "You can reach our technical support team 24/7 at +32466255891 or through our contact form above.",
+    "faq.questions.hours": "What are your business hours?",
+    "faq.answers.hours": "Our office is open Monday through Friday, 9:00 AM to 6:00 PM CET. However, our technical support is available 24/7.",
+    "faq.questions.solutions": "Do you offer custom solutions?",
+    "faq.answers.solutions": "Yes, we specialize in creating custom solutions tailored to your specific business needs and requirements.",
   },
   fr: {
     // Navigation
@@ -134,6 +153,25 @@ const translations = {
     // FAQ
     "faq.title": "FAQ",
     "faq.subtitle": "Questions Fréquentes",
+
+    // Footer
+    "footer.description": "Votre partenaire de confiance en solutions d'entreprise. Nous fournissons des services complets pour aider votre entreprise à croître et à réussir.",
+    "footer.quickLinks": "Liens Rapides",
+    "footer.contact": "Contact",
+    "footer.technicalSupport": "Support Technique",
+    "footer.email": "Email",
+    "footer.location": "Emplacement",
+    "footer.rights": "Tous droits réservés.",
+
+    // FAQ
+    "faq.questions.services": "Quels services proposez-vous ?",
+    "faq.answers.services": "Nous proposons une gamme complète de solutions d'entreprise comprenant le support technique, le conseil et des solutions personnalisées adaptées à vos besoins.",
+    "faq.questions.support": "Comment puis-je obtenir un support technique ?",
+    "faq.answers.support": "Vous pouvez joindre notre équipe de support technique 24h/24 et 7j/7 au +32466255891 ou via notre formulaire de contact ci-dessus.",
+    "faq.questions.hours": "Quels sont vos horaires d'ouverture ?",
+    "faq.answers.hours": "Nos bureaux sont ouverts du lundi au vendredi, de 9h00 à 18h00 CET. Cependant, notre support technique est disponible 24h/24 et 7j/7.",
+    "faq.questions.solutions": "Proposez-vous des solutions personnalisées ?",
+    "faq.answers.solutions": "Oui, nous sommes spécialisés dans la création de solutions personnalisées adaptées à vos besoins et exigences spécifiques.",
   },
 };
 
