@@ -1,5 +1,4 @@
 import { Button } from "./ui/button";
-import { Flash } from "lucide-react";
 
 export const Hero = () => {
   return (
