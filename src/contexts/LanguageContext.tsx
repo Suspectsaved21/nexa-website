@@ -54,6 +54,13 @@ const translations = {
     "about.experience": "With years of experience in the industry, we understand the unique challenges businesses face in today's dynamic environment.",
     "about.commitment": "We take pride in our Belgian roots and our commitment to supporting local businesses while providing international-standard services.",
 
+    // Founder related translations
+    "about.meetFounder": "Meet Our Founder",
+    "about.founderStoryTitle": "The Story Behind Nexa",
+    "about.founderImageAlt": "Nexa's Founder",
+    "about.founderStory": "The journey of Nexa began in 2024 when our founder had a vision to revolutionize the e-commerce landscape. While sitting in his living room in Flemalle, he realized there was a need for a more efficient and customer-centric approach to online shopping in the Liege region.",
+    "about.founderQuote": "I believe that every business, no matter how small, deserves access to efficient e-commerce solutions. That's why we created Nexa - to bridge the gap between local businesses and digital success.",
+
     // Contact
     "contact.title": "Contact Us",
     "contact.subtitle": "Get in Touch",
@@ -136,42 +143,12 @@ const translations = {
     "about.experience": "Avec des années d'expérience dans l'industrie, nous comprenons les défis uniques auxquels les entreprises font face.",
     "about.commitment": "Nous sommes fiers de nos racines belges et de notre engagement à soutenir les entreprises locales.",
 
-    // Contact
-    "contact.title": "Contactez-nous",
-    "contact.subtitle": "Prenez Contact",
-    "contact.name": "Votre Nom",
-    "contact.email": "Votre Email",
-    "contact.message": "Votre Message",
-    "contact.send": "Envoyer",
-    "contact.support": "Support Technique",
-    "contact.office": "Bureau",
-    "contact.messageType": "Type de Message",
-    "contact.general": "Demande Générale",
-    "contact.technical": "Support Technique",
-    "contact.complaint": "Réclamation",
-
-    // FAQ
-    "faq.title": "FAQ",
-    "faq.subtitle": "Questions Fréquentes",
-
-    // Footer
-    "footer.description": "Votre partenaire de confiance en solutions d'entreprise. Nous fournissons des services complets pour aider votre entreprise à croître et à réussir.",
-    "footer.quickLinks": "Liens Rapides",
-    "footer.contact": "Contact",
-    "footer.technicalSupport": "Support Technique",
-    "footer.email": "Email",
-    "footer.location": "Emplacement",
-    "footer.rights": "Tous droits réservés.",
-
-    // FAQ
-    "faq.questions.services": "Quels services proposez-vous ?",
-    "faq.answers.services": "Nous proposons une gamme complète de solutions d'entreprise comprenant le support technique, le conseil et des solutions personnalisées adaptées à vos besoins.",
-    "faq.questions.support": "Comment puis-je obtenir un support technique ?",
-    "faq.answers.support": "Vous pouvez joindre notre équipe de support technique 24h/24 et 7j/7 au +32466255891 ou via notre formulaire de contact ci-dessus.",
-    "faq.questions.hours": "Quels sont vos horaires d'ouverture ?",
-    "faq.answers.hours": "Nos bureaux sont ouverts du lundi au vendredi, de 9h00 à 18h00 CET. Cependant, notre support technique est disponible 24h/24 et 7j/7.",
-    "faq.questions.solutions": "Proposez-vous des solutions personnalisées ?",
-    "faq.answers.solutions": "Oui, nous sommes spécialisés dans la création de solutions personnalisées adaptées à vos besoins et exigences spécifiques.",
+    // Founder related translations
+    "about.meetFounder": "Rencontrez Notre Fondateur",
+    "about.founderStoryTitle": "L'Histoire Derrière Nexa",
+    "about.founderImageAlt": "Fondateur de Nexa",
+    "about.founderStory": "L'aventure de Nexa a commencé en 2024 lorsque notre fondateur a eu une vision pour révolutionner le paysage du e-commerce. Assis dans son salon à Flemalle, il a réalisé qu'il y avait un besoin d'une approche plus efficace et centrée sur le client pour les achats en ligne dans la région de Liège.",
+    "about.founderQuote": "Je crois que chaque entreprise, quelle que soit sa taille, mérite d'avoir accès à des solutions e-commerce efficaces. C'est pourquoi nous avons créé Nexa - pour combler le fossé entre les entreprises locales et le succès numérique.",
   },
 };
 

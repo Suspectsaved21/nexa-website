@@ -1,4 +1,5 @@
 import { useLanguage } from "@/contexts/LanguageContext";
+import { FounderStory } from "./about/FounderStory";
 
 export const About = () => {
   const { t } = useLanguage();
@@ -27,6 +28,9 @@ export const About = () => {
             <p className="text-gray-500 mt-4">
               {t("about.commitment")}
             </p>
+          </div>
+          <div className="flex justify-center">
+            <FounderStory />
           </div>
         </div>
       </div>
