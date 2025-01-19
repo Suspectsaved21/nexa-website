@@ -1,4 +1,4 @@
-import { Package, Star, CheckCircle2, ThumbsUp } from "lucide-react";
+import { Package, Star, CheckCircle2, ThumbsUp, MessageSquare, RefreshCcw, FileText } from "lucide-react";
 
 export const Services = () => {
   const services = [
@@ -21,6 +21,21 @@ export const Services = () => {
       title: "Quality Assurance",
       description: "Rigorous quality control for all products and services",
       icon: Star,
+    },
+    {
+      title: "Client Complaints",
+      description: "Swift resolution of customer issues with dedicated complaint handling",
+      icon: MessageSquare,
+    },
+    {
+      title: "Refund Policy",
+      description: "Hassle-free refund process with transparent policies",
+      icon: RefreshCcw,
+    },
+    {
+      title: "Product Reviews",
+      description: "Verified customer reviews and ratings for all products",
+      icon: FileText,
     },
   ];
 
