@@ -4,6 +4,7 @@ import { Button } from "./ui/button";
 import { LanguageToggle } from "./LanguageToggle";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Link, useLocation } from "react-router-dom";
+import { Logo } from "./Logo";
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -17,10 +18,14 @@ export const Navbar = () => {
         <div className="flex justify-between h-16">
           <div className="flex">
             <div className="flex-shrink-0 flex items-center">
-              <Link to="/" className="flex items-center gap-2 text-2xl font-bold text-nexa-600 hover:text-nexa-700">
-                {isFounderPage && <ArrowLeft className="h-5 w-5" />}
-                Nexa
-              </Link>
+              {isFounderPage ? (
+                <Link to="/" className="flex items-center gap-2 text-2xl font-bold text-nexa-600 hover:text-nexa-700">
+                  <ArrowLeft className="h-5 w-5" />
+                  <Logo />
+                </Link>
+              ) : (
+                <Logo />
+              )}
             </div>
           </div>
           
