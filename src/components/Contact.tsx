@@ -1,12 +1,65 @@
+import { useState } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { Phone, Mail, MapPin } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export const Contact = () => {
-  const handleSubmit = (e: React.FormEvent) => {
+  const { toast } = useToast();
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: "",
+    type: "general",
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Form submission logic would go here
+    setIsSubmitting(true);
+
+    try {
+      const { error } = await supabase.from("messages").insert([
+        {
+          name: formData.name,
+          email: formData.email,
+          message: formData.message,
+          type: formData.type,
+        },
+      ]);
+
+      if (error) throw error;
+
+      toast({
+        title: "Message sent successfully",
+        description: "We'll get back to you soon!",
+      });
+
+      setFormData({
+        name: "",
+        email: "",
+        message: "",
+        type: "general",
+      });
+    } catch (error) {
+      console.error("Error sending message:", error);
+      toast({
+        title: "Error sending message",
+        description: "Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -48,16 +101,54 @@ export const Contact = () => {
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <Input placeholder="Your Name" className="w-full" />
+              <Input
+                placeholder="Your Name"
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                required
+                className="w-full"
+              />
             </div>
             <div>
-              <Input type="email" placeholder="Your Email" className="w-full" />
+              <Input
+                type="email"
+                placeholder="Your Email"
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                required
+                className="w-full"
+              />
             </div>
             <div>
-              <Textarea placeholder="Your Message" className="w-full h-32" />
+              <Select
+                value={formData.type}
+                onValueChange={(value) => setFormData({ ...formData, type: value })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Message Type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="general">General Inquiry</SelectItem>
+                  <SelectItem value="support">Technical Support</SelectItem>
+                  <SelectItem value="complaint">Complaint</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
-            <Button type="submit" className="w-full bg-nexa-600 hover:bg-nexa-700 text-white">
-              Send Message
+            <div>
+              <Textarea
+                placeholder="Your Message"
+                value={formData.message}
+                onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                required
+                className="w-full h-32"
+              />
+            </div>
+            <Button
+              type="submit"
+              className="w-full bg-nexa-600 hover:bg-nexa-700 text-white"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Sending..." : "Send Message"}
             </Button>
           </form>
         </div>

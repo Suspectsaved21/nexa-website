@@ -1,6 +1,23 @@
+import { useState } from "react";
 import { Package, Star, CheckCircle2, ThumbsUp, MessageSquare, RefreshCcw, FileText } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
+import { Button } from "./ui/button";
+import { Textarea } from "./ui/textarea";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 export const Services = () => {
+  const { toast } = useToast();
+  const [rating, setRating] = useState(0);
+  const [comment, setComment] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const services = [
     {
       title: "Dropshipping Solutions",
@@ -38,6 +55,57 @@ export const Services = () => {
       icon: FileText,
     },
   ];
+
+  const handleSubmitReview = async () => {
+    if (rating === 0) {
+      toast({
+        title: "Please select a rating",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        toast({
+          title: "Please sign in to leave a review",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const { error } = await supabase.from("reviews").insert([
+        {
+          user_id: user.id,
+          rating,
+          comment,
+        },
+      ]);
+
+      if (error) throw error;
+
+      toast({
+        title: "Review submitted successfully",
+        description: "Thank you for your feedback!",
+      });
+
+      setRating(0);
+      setComment("");
+    } catch (error) {
+      console.error("Error submitting review:", error);
+      toast({
+        title: "Error submitting review",
+        description: "Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div id="services" className="py-12 bg-white">
@@ -90,6 +158,48 @@ export const Services = () => {
                 <p className="font-semibold text-nexa-600">- Happy Customer {index + 1}</p>
               </div>
             ))}
+          </div>
+
+          {/* Add Review Dialog */}
+          <div className="mt-8 text-center">
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button className="bg-nexa-600 hover:bg-nexa-700 text-white">
+                  Write a Review
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Write a Review</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4 mt-4">
+                  <div className="flex justify-center space-x-2">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <Star
+                        key={star}
+                        className={`h-8 w-8 cursor-pointer ${
+                          star <= rating ? "text-yellow-400 fill-current" : "text-gray-300"
+                        }`}
+                        onClick={() => setRating(star)}
+                      />
+                    ))}
+                  </div>
+                  <Textarea
+                    placeholder="Share your experience..."
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
+                    className="min-h-[100px]"
+                  />
+                  <Button
+                    onClick={handleSubmitReview}
+                    className="w-full bg-nexa-600 hover:bg-nexa-700 text-white"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? "Submitting..." : "Submit Review"}
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
       </div>
