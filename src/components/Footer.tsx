@@ -84,7 +84,7 @@ export const Footer = () => {
                 {t("footer.technicalSupport")}: +32466255891
               </li>
               <li className="text-base text-gray-500">
-                {t("footer.email")}: support@nexa.com
+                {t("footer.email")}: nexsup@nexabelgium.xyz
               </li>
               <li className="text-base text-gray-500">
                 {t("footer.location")}: Belgium

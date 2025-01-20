@@ -18,7 +18,7 @@ export const ContactInfo = () => {
         <Mail className="h-6 w-6 text-nexa-600" />
         <div>
           <h3 className="text-lg font-medium text-gray-900">{t("contact.email")}</h3>
-          <p className="mt-1 text-gray-500">support@nexa.com</p>
+          <p className="mt-1 text-gray-500">nexsup@nexabelgium.xyz</p>
         </div>
       </div>
 
