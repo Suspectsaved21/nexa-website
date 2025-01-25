@@ -45,11 +45,12 @@ export const Navbar = () => {
             <LanguageToggle />
           </div>
 
-          <div className="flex items-center sm:hidden">
+          <div className="flex items-center space-x-4 sm:space-x-0">
+            <LanguageToggle />
             <Button
               variant="ghost"
               onClick={() => setIsOpen(!isOpen)}
-              className="inline-flex items-center justify-center p-2 text-nexa-600"
+              className="inline-flex items-center justify-center p-2 text-nexa-600 sm:hidden"
             >
               {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </Button>
