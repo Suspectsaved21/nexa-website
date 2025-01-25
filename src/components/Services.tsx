@@ -11,6 +11,7 @@ import {
 import { ServiceCard } from "./services/ServiceCard";
 import { ReviewCard } from "./services/ReviewCard";
 import { ReviewForm } from "./services/ReviewForm";
+import { NexaMarket } from "./services/NexaMarket";
 
 export const Services = () => {
   const { t } = useLanguage();
@@ -80,6 +81,8 @@ export const Services = () => {
             ))}
           </div>
         </div>
+
+        <NexaMarket />
 
         <div className="mt-20">
           <h3 className="text-2xl font-bold text-center mb-8">{t("services.customerReviews")}</h3>

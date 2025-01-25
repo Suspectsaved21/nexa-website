@@ -34,6 +34,9 @@ export const fr = {
   "services.writeReview": "Écrire un avis",
   "services.submitReview": "Soumettre l'avis",
   "services.reviewPlaceholder": "Partagez votre expérience...",
+  "services.nexaMarket.title": "Marché Nexa",
+  "services.nexaMarket.description": "Découvrez notre sélection de produits de haute qualité dans notre marketplace e-commerce. Achetez en toute confiance et profitez d'une livraison sans faille partout en Belgique.",
+  "services.nexaMarket.visitButton": "Visiter le Marché Nexa",
 
   // About
   "about.title": "À propos",
