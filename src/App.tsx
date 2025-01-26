@@ -7,6 +7,7 @@ import { LanguageProvider } from "./contexts/LanguageContext";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import Index from "./pages/Index";
 import Founder from "./pages/Founder";
+import LandingPage from "./pages/LandingPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -29,6 +30,7 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/founder" element={<Founder />} />
+              <Route path="/market" element={<LandingPage />} />
             </Routes>
           </BrowserRouter>
         </TooltipProvider>

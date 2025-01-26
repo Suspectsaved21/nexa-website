@@ -1,6 +1,7 @@
 import { ShoppingBag } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 export const NexaMarket = () => {
   const { t } = useLanguage();
@@ -14,12 +15,11 @@ export const NexaMarket = () => {
       <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
         {t("services.nexaMarket.description")}
       </p>
-      <Button
-        className="bg-nexa-600 hover:bg-nexa-700 text-white"
-        onClick={() => window.open("https://market.nexabelgium.xyz", "_blank")}
-      >
-        {t("services.nexaMarket.visitButton")}
-      </Button>
+      <Link to="/market">
+        <Button className="bg-nexa-600 hover:bg-nexa-700 text-white">
+          {t("services.nexaMarket.visitButton")}
+        </Button>
+      </Link>
     </div>
   );
 };
