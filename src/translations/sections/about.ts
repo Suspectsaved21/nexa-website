@@ -1,0 +1,28 @@
+export const about = {
+  en: {
+    "about.title": "About Us",
+    "about.subtitle": "Your Business Partner",
+    "about.description": "We are committed to delivering excellence in business solutions and technical support",
+    "about.location": "Based in Flemalle, Belgium, we are proud to serve the entire Liege region with our comprehensive dropshipping and business solutions.",
+    "about.experience": "With years of experience in the industry, we understand the unique challenges businesses face in today's dynamic environment.",
+    "about.commitment": "We take pride in our Belgian roots and our commitment to supporting local businesses while providing international-standard services.",
+    "about.meetFounder": "Meet Our Founder",
+    "about.founderStoryTitle": "The Story Behind Nexa",
+    "about.founderImageAlt": "Nexa's Founder",
+    "about.founderStory": "The journey of Nexa began in 2024 when our founder had a vision to revolutionize the e-commerce landscape. While sitting in his living room in Flemalle, he realized there was a need for a more efficient and customer-centric approach to online shopping in the Liege region.",
+    "about.founderQuote": "I believe that every business, no matter how small, deserves access to efficient e-commerce solutions. That's why we created Nexa - to bridge the gap between local businesses and digital success.",
+  },
+  fr: {
+    "about.title": "À propos",
+    "about.subtitle": "Votre Partenaire Commercial",
+    "about.description": "Nous nous engageons à offrir l'excellence en solutions commerciales et support technique",
+    "about.location": "Basés à Flemalle, Belgique, nous sommes fiers de servir toute la région de Liège avec nos solutions complètes de dropshipping.",
+    "about.experience": "Avec des années d'expérience dans l'industrie, nous comprenons les défis uniques auxquels les entreprises font face.",
+    "about.commitment": "Nous sommes fiers de nos racines belges et de notre engagement à soutenir les entreprises locales.",
+    "about.meetFounder": "Rencontrez Notre Fondateur",
+    "about.founderStoryTitle": "L'Histoire Derrière Nexa",
+    "about.founderImageAlt": "Fondateur de Nexa",
+    "about.founderStory": "L'aventure de Nexa a commencé en 2024 lorsque notre fondateur a eu une vision pour révolutionner le paysage du e-commerce. Assis dans son salon à Flemalle, il a réalisé qu'il y avait un besoin d'une approche plus efficace et centrée sur le client pour les achats en ligne dans la région de Liège.",
+    "about.founderQuote": "Je crois que chaque entreprise, quelle que soit sa taille, mérite d'avoir accès à des solutions e-commerce efficaces. C'est pourquoi nous avons créé Nexa - pour combler le fossé entre les entreprises locales et le succès numérique.",
+  },
+};
