@@ -33,21 +33,24 @@ const LandingPage = () => {
   const deals = [
     {
       id: 1,
-      name: "Intermediate Size Basketball",
-      price: 29.99,
-      image: "/lovable-uploads/ab7d24b3-7846-4467-a424-f5aa94764e0b.png"
+      name: "Pro Skateboard Complete",
+      price: 89.99,
+      image: "/lovable-uploads/ab7d24b3-7846-4467-a424-f5aa94764e0b.png",
+      description: "Professional grade skateboard with high-quality deck and bearings"
     },
     {
       id: 2,
-      name: "Unisex Loudon Lite Backpack",
-      price: 32.95,
-      image: "/lovable-uploads/381338d8-1507-4f7c-a2a9-eaa9d6af90d7.png"
+      name: "Smart Watch Series X",
+      price: 299.95,
+      image: "/lovable-uploads/381338d8-1507-4f7c-a2a9-eaa9d6af90d7.png",
+      description: "Advanced fitness and health tracking features"
     },
     {
       id: 3,
-      name: "iPhone 14",
-      price: 399,
-      image: "/lovable-uploads/e72d34fb-ac4a-4ee2-a038-c0d48d24baa5.png"
+      name: "Gaming Laptop Pro",
+      price: 1299,
+      image: "/lovable-uploads/1722e92e-a100-4aad-8b40-f32d19077504.png",
+      description: "High-performance gaming laptop with RGB keyboard"
     }
   ];
 
@@ -68,7 +71,6 @@ const LandingPage = () => {
 
   return (
     <div className="min-h-screen">
-      {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200">
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center h-16">
@@ -101,7 +103,6 @@ const LandingPage = () => {
         </div>
       </nav>
 
-      {/* Hero Section */}
       <section className="relative min-h-[90vh] flex items-center mt-16">
         <img 
           src="/lovable-uploads/d8e71c37-83cd-4f24-9782-a884ca1aa993.png" 
@@ -117,7 +118,6 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* Categories Section */}
       <section className="py-16 px-4 bg-gray-50">
         <div className="container mx-auto">
           <h2 className="text-3xl font-bold text-center mb-12">Categories</h2>
@@ -142,7 +142,6 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* Hot Deals Section */}
       <section className="py-16 px-4 bg-white">
         <div className="container mx-auto">
           <h2 className="text-3xl font-bold text-center mb-12">Hot Deals</h2>
@@ -156,6 +155,7 @@ const LandingPage = () => {
                 />
                 <h3 className="text-lg font-semibold mb-2">{deal.name}</h3>
                 <p className="text-2xl font-bold text-nexa-primary mb-4">${deal.price}</p>
+                <p className="text-gray-600 mb-4">{deal.description}</p>
                 <Button className="w-full">Add to Cart</Button>
               </div>
             ))}
@@ -163,7 +163,6 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* Blog Section */}
       <section className="py-16 px-4 bg-gray-50">
         <div className="container mx-auto">
           <h2 className="text-3xl font-bold text-center mb-12">Latest Blog Posts</h2>
@@ -186,7 +185,6 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* Footer */}
       <footer className="bg-white border-t">
         <div className="container mx-auto px-4 py-12">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">

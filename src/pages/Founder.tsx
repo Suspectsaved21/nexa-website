@@ -1,3 +1,4 @@
+
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Navbar } from "@/components/Navbar";
 import { LazyImage } from "@/components/LazyImage";
@@ -31,6 +32,7 @@ const Founder = () => {
             <p>{t("founder.background")}</p>
             <p>{t("founder.vision")}</p>
             <p>{t("founder.values")}</p>
+            <p>{t("founder.community")}</p>
             <p>{t("founder.future")}</p>
           </div>
 
