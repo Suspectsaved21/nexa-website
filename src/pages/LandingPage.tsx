@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -106,8 +105,8 @@ const LandingPage = () => {
 
       <section className="relative min-h-[90vh] flex items-center mt-16">
         <img 
-          src="/lovable-uploads/60120fed-7730-46e6-8340-5f0f49df8aa2.png" 
-          alt="Nexa Collection" 
+          src="/lovable-uploads/54a95ad7-85b3-4455-a167-c94194096831.png" 
+          alt="Nexa Collection - Diverse group wearing casual fashion" 
           className="absolute inset-0 w-full h-full object-cover"
         />
         <div className="relative z-10 container mx-auto px-4 text-center">
