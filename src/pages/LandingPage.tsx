@@ -19,14 +19,14 @@ const LandingPage = () => {
       image: "/lovable-uploads/e72d34fb-ac4a-4ee2-a038-c0d48d24baa5.png"
     },
     {
-      name: "Furniture",
-      link: "furniture",
-      image: "/lovable-uploads/0f839c5f-af78-436e-bb31-2dd9d13c6a2c.png"
+      name: "Sports",
+      link: "sports",
+      image: "/lovable-uploads/cd8156df-b27f-4f5a-85bc-d8953311e8d2.png"
     },
     {
-      name: "Beauty",
-      link: "beauty",
-      image: "/lovable-uploads/e446caf7-15d8-4892-9481-b3c6c8289301.png"
+      name: "Tech",
+      link: "tech",
+      image: "/lovable-uploads/1722e92e-a100-4aad-8b40-f32d19077504.png"
     }
   ];
 
@@ -35,14 +35,14 @@ const LandingPage = () => {
       id: 1,
       name: "Pro Skateboard Complete",
       price: 89.99,
-      image: "/lovable-uploads/ab7d24b3-7846-4467-a424-f5aa94764e0b.png",
+      image: "/lovable-uploads/cd8156df-b27f-4f5a-85bc-d8953311e8d2.png",
       description: "Professional grade skateboard with high-quality deck and bearings"
     },
     {
       id: 2,
       name: "Smart Watch Series X",
       price: 299.95,
-      image: "/lovable-uploads/381338d8-1507-4f7c-a2a9-eaa9d6af90d7.png",
+      image: "/lovable-uploads/1722e92e-a100-4aad-8b40-f32d19077504.png",
       description: "Advanced fitness and health tracking features"
     },
     {
@@ -57,15 +57,15 @@ const LandingPage = () => {
   const blogPosts = [
     {
       id: 1,
-      title: "Latest Fashion Trends 2024",
-      excerpt: "Discover the hottest fashion trends for the upcoming season...",
-      image: "/lovable-uploads/e72d34fb-ac4a-4ee2-a038-c0d48d24baa5.png"
+      title: "Latest Tech Trends 2024",
+      excerpt: "Discover the hottest tech trends for the upcoming season...",
+      image: "/lovable-uploads/1722e92e-a100-4aad-8b40-f32d19077504.png"
     },
     {
       id: 2,
-      title: "Tech Gadgets Review",
-      excerpt: "An in-depth look at the latest tech gadgets in the market...",
-      image: "/lovable-uploads/1722e92e-a100-4aad-8b40-f32d19077504.png"
+      title: "Skateboarding Culture",
+      excerpt: "An in-depth look at the thriving skateboard community...",
+      image: "/lovable-uploads/cd8156df-b27f-4f5a-85bc-d8953311e8d2.png"
     }
   ];
 
@@ -105,8 +105,8 @@ const LandingPage = () => {
 
       <section className="relative min-h-[90vh] flex items-center mt-16">
         <img 
-          src="/lovable-uploads/d8e71c37-83cd-4f24-9782-a884ca1aa993.png" 
-          alt="Nexa Fashion Collection" 
+          src="/lovable-uploads/cd8156df-b27f-4f5a-85bc-d8953311e8d2.png" 
+          alt="Nexa Collection" 
           className="absolute inset-0 w-full h-full object-cover"
         />
         <div className="relative z-10 container mx-auto px-4 text-center">
@@ -115,6 +115,31 @@ const LandingPage = () => {
           <Button size="lg" className="bg-nexa-primary hover:bg-nexa-dark text-white text-lg px-8 py-6">
             Shop Now
           </Button>
+        </div>
+      </section>
+
+      <section className="py-16 px-4 bg-white">
+        <div className="container mx-auto">
+          <h2 className="text-3xl font-bold text-center mb-12">Hot Deals</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {deals.map((deal) => (
+              <div key={deal.id} className="bg-white p-6 rounded-lg shadow-md transform transition-transform hover:scale-105">
+                <div className="relative h-64 mb-4">
+                  <img 
+                    src={deal.image} 
+                    alt={deal.name}
+                    className="absolute inset-0 w-full h-full object-cover rounded-lg"
+                  />
+                </div>
+                <h3 className="text-lg font-semibold mb-2">{deal.name}</h3>
+                <p className="text-gray-600 mb-3">{deal.description}</p>
+                <p className="text-2xl font-bold text-nexa-primary mb-4">${deal.price}</p>
+                <Button className="w-full bg-nexa-600 hover:bg-nexa-700 text-white">
+                  Add to Cart
+                </Button>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -143,27 +168,6 @@ const LandingPage = () => {
       </section>
 
       <section className="py-16 px-4 bg-white">
-        <div className="container mx-auto">
-          <h2 className="text-3xl font-bold text-center mb-12">Hot Deals</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {deals.map((deal) => (
-              <div key={deal.id} className="bg-white p-6 rounded-lg shadow-md">
-                <img 
-                  src={deal.image} 
-                  alt={deal.name}
-                  className="w-full h-48 object-contain mb-4"
-                />
-                <h3 className="text-lg font-semibold mb-2">{deal.name}</h3>
-                <p className="text-2xl font-bold text-nexa-primary mb-4">${deal.price}</p>
-                <p className="text-gray-600 mb-4">{deal.description}</p>
-                <Button className="w-full">Add to Cart</Button>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="py-16 px-4 bg-gray-50">
         <div className="container mx-auto">
           <h2 className="text-3xl font-bold text-center mb-12">Latest Blog Posts</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
