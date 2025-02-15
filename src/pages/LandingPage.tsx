@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,7 +12,7 @@ const LandingPage = () => {
     {
       name: "Electronics",
       link: "electronics",
-      image: "/lovable-uploads/1722e92e-a100-4aad-8b40-f32d19077504.png"
+      image: "/lovable-uploads/af68aec7-4213-409b-9e64-6ac17ade8a4b.png"
     },
     {
       name: "Fashion",
@@ -21,29 +22,29 @@ const LandingPage = () => {
     {
       name: "Sports",
       link: "sports",
-      image: "/lovable-uploads/cd8156df-b27f-4f5a-85bc-d8953311e8d2.png"
+      image: "/lovable-uploads/60120fed-7730-46e6-8340-5f0f49df8aa2.png"
     },
     {
       name: "Tech",
       link: "tech",
-      image: "/lovable-uploads/1722e92e-a100-4aad-8b40-f32d19077504.png"
+      image: "/lovable-uploads/af68aec7-4213-409b-9e64-6ac17ade8a4b.png"
     }
   ];
 
   const deals = [
     {
       id: 1,
-      name: "Pro Skateboard Complete",
+      name: "Pink Gradient Skateboard",
       price: 89.99,
-      image: "/lovable-uploads/cd8156df-b27f-4f5a-85bc-d8953311e8d2.png",
-      description: "Professional grade skateboard with high-quality deck and bearings"
+      image: "/lovable-uploads/60120fed-7730-46e6-8340-5f0f49df8aa2.png",
+      description: "Professional grade skateboard with stylish gradient design and pink wheels"
     },
     {
       id: 2,
-      name: "Smart Watch Series X",
+      name: "Smart Fitness Watch",
       price: 299.95,
-      image: "/lovable-uploads/1722e92e-a100-4aad-8b40-f32d19077504.png",
-      description: "Advanced fitness and health tracking features"
+      image: "/lovable-uploads/af68aec7-4213-409b-9e64-6ac17ade8a4b.png",
+      description: "Advanced fitness tracking with heart rate monitoring and activity stats"
     },
     {
       id: 3,
@@ -59,13 +60,13 @@ const LandingPage = () => {
       id: 1,
       title: "Latest Tech Trends 2024",
       excerpt: "Discover the hottest tech trends for the upcoming season...",
-      image: "/lovable-uploads/1722e92e-a100-4aad-8b40-f32d19077504.png"
+      image: "/lovable-uploads/af68aec7-4213-409b-9e64-6ac17ade8a4b.png"
     },
     {
       id: 2,
       title: "Skateboarding Culture",
       excerpt: "An in-depth look at the thriving skateboard community...",
-      image: "/lovable-uploads/cd8156df-b27f-4f5a-85bc-d8953311e8d2.png"
+      image: "/lovable-uploads/60120fed-7730-46e6-8340-5f0f49df8aa2.png"
     }
   ];
 
@@ -105,7 +106,7 @@ const LandingPage = () => {
 
       <section className="relative min-h-[90vh] flex items-center mt-16">
         <img 
-          src="/lovable-uploads/cd8156df-b27f-4f5a-85bc-d8953311e8d2.png" 
+          src="/lovable-uploads/60120fed-7730-46e6-8340-5f0f49df8aa2.png" 
           alt="Nexa Collection" 
           className="absolute inset-0 w-full h-full object-cover"
         />
@@ -115,31 +116,6 @@ const LandingPage = () => {
           <Button size="lg" className="bg-nexa-primary hover:bg-nexa-dark text-white text-lg px-8 py-6">
             Shop Now
           </Button>
-        </div>
-      </section>
-
-      <section className="py-16 px-4 bg-white">
-        <div className="container mx-auto">
-          <h2 className="text-3xl font-bold text-center mb-12">Hot Deals</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {deals.map((deal) => (
-              <div key={deal.id} className="bg-white p-6 rounded-lg shadow-md transform transition-transform hover:scale-105">
-                <div className="relative h-64 mb-4">
-                  <img 
-                    src={deal.image} 
-                    alt={deal.name}
-                    className="absolute inset-0 w-full h-full object-cover rounded-lg"
-                  />
-                </div>
-                <h3 className="text-lg font-semibold mb-2">{deal.name}</h3>
-                <p className="text-gray-600 mb-3">{deal.description}</p>
-                <p className="text-2xl font-bold text-nexa-primary mb-4">${deal.price}</p>
-                <Button className="w-full bg-nexa-600 hover:bg-nexa-700 text-white">
-                  Add to Cart
-                </Button>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 
@@ -168,6 +144,31 @@ const LandingPage = () => {
       </section>
 
       <section className="py-16 px-4 bg-white">
+        <div className="container mx-auto">
+          <h2 className="text-3xl font-bold text-center mb-12">Hot Deals</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {deals.map((deal) => (
+              <div key={deal.id} className="bg-white p-6 rounded-lg shadow-md transform transition-transform hover:scale-105">
+                <div className="relative h-64 mb-4">
+                  <img 
+                    src={deal.image} 
+                    alt={deal.name}
+                    className="absolute inset-0 w-full h-full object-contain rounded-lg"
+                  />
+                </div>
+                <h3 className="text-lg font-semibold mb-2">{deal.name}</h3>
+                <p className="text-gray-600 mb-3">{deal.description}</p>
+                <p className="text-2xl font-bold text-nexa-primary mb-4">${deal.price}</p>
+                <Button className="w-full bg-nexa-600 hover:bg-nexa-700 text-white">
+                  Add to Cart
+                </Button>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-16 px-4 bg-gray-50">
         <div className="container mx-auto">
           <h2 className="text-3xl font-bold text-center mb-12">Latest Blog Posts</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
