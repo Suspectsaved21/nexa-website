@@ -7,7 +7,7 @@ export const MarketFooter = () => {
   return (
     <footer className="bg-[#232f3e] text-white py-6">
       <div className="container mx-auto px-4 text-center">
-        <p>{t("market.footerText")}</p>
+        <p>{t("footerText")}</p>
       </div>
     </footer>
   );

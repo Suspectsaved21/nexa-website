@@ -89,7 +89,7 @@ const LandingPage = () => {
   ];
 
   return (
-    <div className="min-h-screen pb-16">
+    <div className="relative min-h-screen">
       <MarketHeader
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
@@ -98,7 +98,7 @@ const LandingPage = () => {
         totalCartCount={totalCartCount}
       />
       
-      <div className="mt-32 md:mt-16">
+      <div className="relative pt-16 md:pt-16">
         <MarketHero />
         <MarketCategories categories={categories} />
         <MarketVideoSection categories={categories} />

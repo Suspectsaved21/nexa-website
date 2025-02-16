@@ -23,7 +23,7 @@ export const MarketDeals = ({ deals, cartItems, incrementItem, decrementItem }: 
   return (
     <section className="py-8 md:py-16 px-4 bg-white">
       <div className="container mx-auto">
-        <h2 className="text-3xl font-bold text-center mb-8 md:mb-12">{t("market.hotDeals")}</h2>
+        <h2 className="text-3xl font-bold text-center mb-8 md:mb-12">{t("hotDeals")}</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
           {deals.map((deal) => (
             <div key={deal.id} className="bg-white p-4 md:p-6 rounded-lg shadow-md border border-gray-200">
@@ -45,7 +45,7 @@ export const MarketDeals = ({ deals, cartItems, incrementItem, decrementItem }: 
                   onClick={() => incrementItem(deal.id)}
                   className="flex-1 bg-[#530a46] hover:bg-[#3d0733] text-white"
                 >
-                  {t("market.addToCart")} ({cartItems[deal.id] || 0})
+                  {t("addToCart")} ({cartItems[deal.id] || 0})
                 </Button>
                 <button 
                   onClick={() => incrementItem(deal.id)}

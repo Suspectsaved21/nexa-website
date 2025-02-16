@@ -18,7 +18,7 @@ export const MarketCategories = ({ categories }: MarketCategoriesProps) => {
   return (
     <section className="py-8 md:py-16 px-4 bg-gray-50">
       <div className="container mx-auto">
-        <h2 className="text-3xl font-bold text-center mb-8 md:mb-12">{t("market.categories")}</h2>
+        <h2 className="text-3xl font-bold text-center mb-8 md:mb-12">{t("categories")}</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
           {categories.map((category) => (
             <Link 
@@ -32,7 +32,7 @@ export const MarketCategories = ({ categories }: MarketCategoriesProps) => {
                   alt={category.name}
                   className="w-full h-32 md:h-48 object-cover rounded-md mb-4"
                 />
-                <h3 className="text-lg md:text-xl font-semibold text-center">{t(`market.${category.link}`)}</h3>
+                <h3 className="text-lg md:text-xl font-semibold text-center">{t(category.link)}</h3>
               </div>
             </Link>
           ))}
