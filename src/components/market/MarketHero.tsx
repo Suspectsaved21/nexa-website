@@ -12,7 +12,7 @@ export const MarketHero = () => {
       <div className="absolute inset-0 bg-black/40" />
       <div className="relative z-10 container mx-auto px-4 text-center">
         <h1 className="text-5xl md:text-7xl font-bold mb-4 text-white">
-          {t("welcome")}
+          {t("welcome to nexa")}
         </h1>
         <p className="text-xl md:text-2xl mb-8 text-white">
           {t("Your one e-shop online commerce for everything!")}
