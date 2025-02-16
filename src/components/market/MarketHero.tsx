@@ -15,7 +15,7 @@ export const MarketHero = () => {
           {t("welcome")}
         </h1>
         <p className="text-xl md:text-2xl mb-8 text-white">
-          {t("tagLine")}
+          {t("Your one e-shop online commerce for everything!")}
         </p>
         <Button size="lg" className="bg-[#721244] hover:bg-[#5d0f37] text-white">
           {t("shopNow")}
