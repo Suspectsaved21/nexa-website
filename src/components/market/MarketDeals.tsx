@@ -1,0 +1,63 @@
+
+import { Button } from "@/components/ui/button";
+import { Plus, Minus } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
+
+interface Deal {
+  id: number;
+  name: string;
+  price: number;
+  image: string;
+}
+
+interface MarketDealsProps {
+  deals: Deal[];
+  cartItems: { [key: number]: number };
+  incrementItem: (id: number) => void;
+  decrementItem: (id: number) => void;
+}
+
+export const MarketDeals = ({ deals, cartItems, incrementItem, decrementItem }: MarketDealsProps) => {
+  const { t } = useLanguage();
+
+  return (
+    <section className="py-8 md:py-16 px-4 bg-white">
+      <div className="container mx-auto">
+        <h2 className="text-3xl font-bold text-center mb-8 md:mb-12">{t("market.hotDeals")}</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
+          {deals.map((deal) => (
+            <div key={deal.id} className="bg-white p-4 md:p-6 rounded-lg shadow-md border border-gray-200">
+              <img 
+                src={deal.image} 
+                alt={deal.name}
+                className="w-full h-32 md:h-40 object-contain mb-4"
+              />
+              <h3 className="text-base md:text-lg font-semibold mb-2">{deal.name}</h3>
+              <p className="text-lg md:text-xl font-bold text-[#721244] mb-4">${deal.price}</p>
+              <div className="flex items-center justify-between gap-2">
+                <button 
+                  onClick={() => decrementItem(deal.id)}
+                  className="p-2 bg-[#530a46] text-white rounded hover:bg-[#3d0733]"
+                >
+                  <Minus className="h-4 w-4" />
+                </button>
+                <Button 
+                  onClick={() => incrementItem(deal.id)}
+                  className="flex-1 bg-[#530a46] hover:bg-[#3d0733] text-white"
+                >
+                  {t("market.addToCart")} ({cartItems[deal.id] || 0})
+                </Button>
+                <button 
+                  onClick={() => incrementItem(deal.id)}
+                  className="p-2 bg-[#530a46] text-white rounded hover:bg-[#3d0733]"
+                >
+                  <Plus className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
