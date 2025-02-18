@@ -37,7 +37,7 @@ const AuthPage = () => {
         }
 
         setLastSignupAttempt(now);
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
           email,
           password,
         });
@@ -48,8 +48,14 @@ const AuthPage = () => {
           }
           throw error;
         }
-        
-        toast.success("Verification email sent! Please check your inbox.");
+
+        // If we have a user after signup, they have access immediately
+        if (data.user) {
+          toast.success("Account created successfully!");
+          navigate("/market");
+        } else {
+          toast.error("Something went wrong during signup");
+        }
       }
     } catch (error: any) {
       let errorMessage = error.message;
