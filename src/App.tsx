@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -8,6 +9,8 @@ import { ErrorBoundary } from "./components/ErrorBoundary";
 import Index from "./pages/Index";
 import Founder from "./pages/Founder";
 import LandingPage from "./pages/LandingPage";
+import CartPage from "./pages/CartPage";
+import AuthPage from "./pages/AuthPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -31,6 +34,8 @@ const App = () => (
               <Route path="/" element={<Index />} />
               <Route path="/founder" element={<Founder />} />
               <Route path="/market" element={<LandingPage />} />
+              <Route path="/cart" element={<CartPage />} />
+              <Route path="/auth" element={<AuthPage />} />
             </Routes>
           </BrowserRouter>
         </TooltipProvider>
