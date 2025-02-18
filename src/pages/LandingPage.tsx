@@ -1,40 +1,32 @@
 
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { MarketHeader } from "@/components/market/MarketHeader";
 import { MarketHero } from "@/components/market/MarketHero";
 import { MarketCategories } from "@/components/market/MarketCategories";
 import { MarketVideoSection } from "@/components/market/MarketVideoSection";
 import { MarketDeals } from "@/components/market/MarketDeals";
 import { MarketFooter } from "@/components/market/MarketFooter";
+import { supabase } from "@/integrations/supabase/client";
+import { useCart } from "@/hooks/useCart";
+import { toast } from "sonner";
 
 const LandingPage = () => {
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [cartItems, setCartItems] = useState<{ [key: number]: number }>({});
-  const [totalCartCount, setTotalCartCount] = useState(0);
-
-  const updateCartCount = () => {
-    const total = Object.values(cartItems).reduce((sum, count) => sum + count, 0);
-    setTotalCartCount(total);
-  };
+  const { cartItems, addToCart, updateQuantity, getCartTotal } = useCart();
 
   useEffect(() => {
-    updateCartCount();
-  }, [cartItems]);
+    checkAuth();
+  }, []);
 
-  const incrementItem = (dealId: number) => {
-    setCartItems(prev => ({
-      ...prev,
-      [dealId]: (prev[dealId] || 0) + 1
-    }));
-  };
-
-  const decrementItem = (dealId: number) => {
-    if (cartItems[dealId] > 0) {
-      setCartItems(prev => ({
-        ...prev,
-        [dealId]: prev[dealId] - 1
-      }));
+  const checkAuth = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      toast.error("Please sign in to access the market");
+      navigate("/auth");
+      return;
     }
   };
 
@@ -88,6 +80,22 @@ const LandingPage = () => {
     }
   ];
 
+  const incrementItem = (dealId: number) => {
+    const item = cartItems.find(item => item.product_id === dealId);
+    if (item) {
+      updateQuantity(item.id, item.quantity + 1);
+    } else {
+      addToCart(dealId);
+    }
+  };
+
+  const decrementItem = (dealId: number) => {
+    const item = cartItems.find(item => item.product_id === dealId);
+    if (item && item.quantity > 0) {
+      updateQuantity(item.id, item.quantity - 1);
+    }
+  };
+
   return (
     <div className="relative min-h-screen">
       <MarketHeader
@@ -95,7 +103,7 @@ const LandingPage = () => {
         setSearchQuery={setSearchQuery}
         isMenuOpen={isMenuOpen}
         setIsMenuOpen={setIsMenuOpen}
-        totalCartCount={totalCartCount}
+        totalCartCount={getCartTotal()}
       />
       
       <div className="relative pt-16 md:pt-16">

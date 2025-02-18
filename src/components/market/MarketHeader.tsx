@@ -3,8 +3,10 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search, Menu, ShoppingCart, X } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 interface MarketHeaderProps {
   searchQuery: string;
@@ -21,8 +23,18 @@ export const MarketHeader = ({
   setIsMenuOpen,
   totalCartCount
 }: MarketHeaderProps) => {
+  const navigate = useNavigate();
   const { t, language, setLanguage } = useLanguage();
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
+
+  const handleSignOut = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      toast.error("Error signing out");
+    } else {
+      navigate("/auth");
+    }
+  };
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 h-auto md:h-16 bg-[#032e64] text-white">
@@ -118,9 +130,19 @@ export const MarketHeader = ({
           </div>
           
           <div className={`${isSearchExpanded ? 'hidden md:flex' : 'flex'} items-center gap-4`}>
-            <Button variant="secondary" className="bg-[#721244] text-white hover:bg-[#5d0f37] flex items-center gap-2">
-              <ShoppingCart className="h-4 w-4" />
-              <span>{t("cart")}({totalCartCount})</span>
+            <Link to="/cart">
+              <Button variant="secondary" className="bg-[#721244] text-white hover:bg-[#5d0f37] flex items-center gap-2">
+                <ShoppingCart className="h-4 w-4" />
+                <span>{t("cart")}({totalCartCount})</span>
+              </Button>
+            </Link>
+
+            <Button 
+              variant="secondary" 
+              className="bg-[#721244] text-white hover:bg-[#5d0f37]"
+              onClick={handleSignOut}
+            >
+              Sign Out
             </Button>
 
             <select 
