@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,6 +15,7 @@ const AuthPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [lastSignupAttempt, setLastSignupAttempt] = useState(0);
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,15 +30,33 @@ const AuthPage = () => {
         if (error) throw error;
         navigate("/market");
       } else {
+        // Check if enough time has passed since the last signup attempt
+        const now = Date.now();
+        if (now - lastSignupAttempt < 11000) { // 11 seconds in milliseconds
+          throw new Error("Please wait 11 seconds before trying to sign up again");
+        }
+
+        setLastSignupAttempt(now);
         const { error } = await supabase.auth.signUp({
           email,
           password,
         });
-        if (error) throw error;
+        
+        if (error) {
+          if (error.message.includes("rate limit")) {
+            throw new Error("Please wait a moment before trying again");
+          }
+          throw error;
+        }
+        
         toast.success("Verification email sent! Please check your inbox.");
       }
     } catch (error: any) {
-      toast.error(error.message);
+      let errorMessage = error.message;
+      if (error.message.includes("rate limit") || error.message.includes("429")) {
+        errorMessage = "Please wait a moment before trying again";
+      }
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
