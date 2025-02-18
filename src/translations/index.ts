@@ -1,3 +1,4 @@
+
 import { nav } from "./sections/nav";
 import { hero } from "./sections/hero";
 import { services } from "./sections/services";
@@ -6,6 +7,7 @@ import { contact } from "./sections/contact";
 import { faq } from "./sections/faq";
 import { footer } from "./sections/footer";
 import { founder } from "./sections/founder";
+import { market } from "./sections/market";
 
 export const translations = {
   en: {
@@ -17,6 +19,7 @@ export const translations = {
     ...faq.en,
     ...footer.en,
     ...founder.en,
+    ...market.en,
   },
   fr: {
     ...nav.fr,
@@ -27,6 +30,7 @@ export const translations = {
     ...faq.fr,
     ...footer.fr,
     ...founder.fr,
+    ...market.fr,
   },
 } as const;
 
