@@ -2,6 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Plus, Minus } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { CartItem } from "@/hooks/useCart";
 
 interface Deal {
   id: number;
@@ -12,13 +13,18 @@ interface Deal {
 
 interface MarketDealsProps {
   deals: Deal[];
-  cartItems: { [key: number]: number };
+  cartItems: CartItem[];
   incrementItem: (id: number) => void;
   decrementItem: (id: number) => void;
 }
 
 export const MarketDeals = ({ deals, cartItems, incrementItem, decrementItem }: MarketDealsProps) => {
   const { t } = useLanguage();
+
+  const getItemQuantity = (dealId: number) => {
+    const item = cartItems.find(item => item.product_id === dealId);
+    return item?.quantity || 0;
+  };
 
   return (
     <section className="py-8 md:py-16 px-4 bg-white">
@@ -45,7 +51,7 @@ export const MarketDeals = ({ deals, cartItems, incrementItem, decrementItem }: 
                   onClick={() => incrementItem(deal.id)}
                   className="flex-1 bg-[#530a46] hover:bg-[#3d0733] text-white"
                 >
-                  {t("addToCart")} ({cartItems[deal.id] || 0})
+                  {t("addToCart")} ({getItemQuantity(deal.id)})
                 </Button>
                 <button 
                   onClick={() => incrementItem(deal.id)}
