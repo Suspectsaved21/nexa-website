@@ -7,16 +7,11 @@ import { Plus, Minus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { useCart } from "@/hooks/useCart";
 
-// Define the cart item interface
-interface BaseCartItem {
+// Define the cart item with additional product details
+interface CartItemWithDetails {
   id: string;
   product_id: number;
   quantity: number;
-  user_id: string;
-}
-
-// Define the cart item with additional product details
-interface CartItemWithDetails extends BaseCartItem {
   name: string;
   price: number;
   image: string;
