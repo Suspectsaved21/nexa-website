@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -130,20 +129,12 @@ export const MarketHeader = ({
           </div>
           
           <div className={`${isSearchExpanded ? 'hidden md:flex' : 'flex'} items-center gap-4`}>
-            <Link to="/cart">
+            <Link to="/checkout">
               <Button variant="secondary" className="bg-[#721244] text-white hover:bg-[#5d0f37] flex items-center gap-2">
                 <ShoppingCart className="h-4 w-4" />
                 <span>{t("cart")}({totalCartCount})</span>
               </Button>
             </Link>
-
-            <Button 
-              variant="secondary" 
-              className="bg-[#721244] text-white hover:bg-[#5d0f37]"
-              onClick={handleSignOut}
-            >
-              Sign Out
-            </Button>
 
             <select 
               value={language}
@@ -159,3 +150,5 @@ export const MarketHeader = ({
     </header>
   );
 };
+
+export default MarketHeader;

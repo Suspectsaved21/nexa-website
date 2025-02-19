@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { MarketHeader } from "@/components/market/MarketHeader";
 import { MarketHero } from "@/components/market/MarketHero";
@@ -7,28 +7,13 @@ import { MarketCategories } from "@/components/market/MarketCategories";
 import { MarketVideoSection } from "@/components/market/MarketVideoSection";
 import { MarketDeals } from "@/components/market/MarketDeals";
 import { MarketFooter } from "@/components/market/MarketFooter";
-import { supabase } from "@/integrations/supabase/client";
 import { useCart } from "@/hooks/useCart";
-import { toast } from "sonner";
 
 const LandingPage = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { cartItems, addToCart, updateQuantity, getCartTotal } = useCart();
-
-  useEffect(() => {
-    checkAuth();
-  }, []);
-
-  const checkAuth = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      toast.error("Please sign in to access the market");
-      navigate("/auth");
-      return;
-    }
-  };
 
   const categories = [
     {
