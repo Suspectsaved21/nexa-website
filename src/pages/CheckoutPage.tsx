@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -57,23 +56,20 @@ const CheckoutPage = () => {
       const stripe = await stripePromise;
       if (!stripe) throw new Error('Stripe failed to initialize');
 
-      // Create a payment intent
+      // Create a Checkout Session
       const { data, error } = await supabase.functions.invoke('create-payment-intent', {
         body: { amount: calculateTotal(), currency: 'usd' },
       });
 
       if (error) throw error;
-      if (!data.clientSecret) throw new Error('No client secret received');
+      if (!data.sessionId) throw new Error('No session ID received');
 
-      // Redirect to Stripe Checkout
-      const { error: stripeError } = await stripe.redirectToCheckout({
-        clientSecret: data.clientSecret,
-        mode: 'payment',
-        successUrl: `${window.location.origin}/market?success=true`,
-        cancelUrl: `${window.location.origin}/checkout?canceled=true`,
+      // Redirect to Checkout
+      const result = await stripe.redirectToCheckout({
+        sessionId: data.sessionId,
       });
 
-      if (stripeError) throw stripeError;
+      if (result.error) throw result.error;
     } catch (error) {
       console.error('Payment error:', error);
       toast.error('Payment failed. Please try again.');
