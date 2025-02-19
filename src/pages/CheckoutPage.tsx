@@ -6,6 +6,11 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { Plus, Minus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { useCart } from "@/hooks/useCart";
+import { loadStripe } from "@stripe/stripe-js";
+import { supabase } from "@/integrations/supabase/client";
+
+// Initialize Stripe
+const stripePromise = loadStripe('pk_test_51OxJdHEC2wZDatvOsWZz9KyaWyyjCfL5JwL4RAnGqtmRbWsxKBMxfMPe40xeF4xdXGAjwLwXBFbqBrMf4iUlUynF00i9k6LzBs');
 
 // Define the cart item with additional product details
 interface CartItemWithDetails {
@@ -21,6 +26,7 @@ const CheckoutPage = () => {
   const { t } = useLanguage();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
+  const [isProcessing, setIsProcessing] = useState(false);
   const { cartItems, updateQuantity, removeFromCart } = useCart();
   const [itemsWithDetails, setItemsWithDetails] = useState<CartItemWithDetails[]>([]);
 
@@ -45,11 +51,47 @@ const CheckoutPage = () => {
     return itemsWithDetails.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   };
 
-  const handleCheckout = () => {
-    // This is where you would implement the actual checkout logic
-    toast.success("Thank you for your order!");
-    navigate("/market");
+  const handleCheckout = async () => {
+    try {
+      setIsProcessing(true);
+      const stripe = await stripePromise;
+      if (!stripe) throw new Error('Stripe failed to initialize');
+
+      // Create a payment intent
+      const { data, error } = await supabase.functions.invoke('create-payment-intent', {
+        body: { amount: calculateTotal(), currency: 'usd' },
+      });
+
+      if (error) throw error;
+      if (!data.clientSecret) throw new Error('No client secret received');
+
+      // Redirect to Stripe Checkout
+      const { error: stripeError } = await stripe.redirectToCheckout({
+        clientSecret: data.clientSecret,
+        mode: 'payment',
+        successUrl: `${window.location.origin}/market?success=true`,
+        cancelUrl: `${window.location.origin}/checkout?canceled=true`,
+      });
+
+      if (stripeError) throw stripeError;
+    } catch (error) {
+      console.error('Payment error:', error);
+      toast.error('Payment failed. Please try again.');
+    } finally {
+      setIsProcessing(false);
+    }
   };
+
+  useEffect(() => {
+    // Check for success/canceled URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('success')) {
+      toast.success('Payment successful! Thank you for your purchase.');
+      navigate('/market');
+    } else if (urlParams.get('canceled')) {
+      toast.error('Payment canceled.');
+    }
+  }, [navigate]);
 
   if (isLoading) {
     return <div className="container mx-auto px-4 py-8 mt-16">Loading...</div>;
@@ -113,8 +155,12 @@ const CheckoutPage = () => {
               <span className="text-xl font-semibold">Total:</span>
               <span className="text-xl font-bold">${calculateTotal().toFixed(2)}</span>
             </div>
-            <Button onClick={handleCheckout} className="w-full bg-[#721244] hover:bg-[#5d0f37]">
-              Complete Purchase
+            <Button 
+              onClick={handleCheckout} 
+              className="w-full bg-[#721244] hover:bg-[#5d0f37]"
+              disabled={isProcessing}
+            >
+              {isProcessing ? 'Processing...' : 'Proceed to Payment'}
             </Button>
           </div>
         </div>
