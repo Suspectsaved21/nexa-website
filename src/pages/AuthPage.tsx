@@ -1,134 +1,105 @@
 
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useLanguage } from "@/contexts/LanguageContext";
-import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 const AuthPage = () => {
-  const { t } = useLanguage();
   const navigate = useNavigate();
-  const [isLogin, setIsLogin] = useState(true);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [lastSignupAttempt, setLastSignupAttempt] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+    setIsLoading(true);
 
     try {
-      if (isLogin) {
+      if (isSignUp) {
+        const { error } = await supabase.auth.signUp({
+          email,
+          password,
+        });
+        if (error) throw error;
+        toast.success('Check your email to confirm your account!');
+      } else {
         const { error } = await supabase.auth.signInWithPassword({
           email,
           password,
         });
         if (error) throw error;
-        navigate("/market");
-      } else {
-        // Check if enough time has passed since the last signup attempt
-        const now = Date.now();
-        if (now - lastSignupAttempt < 11000) { // 11 seconds in milliseconds
-          throw new Error("Please wait 11 seconds before trying to sign up again");
-        }
-
-        setLastSignupAttempt(now);
-        const { data, error } = await supabase.auth.signUp({
-          email,
-          password,
-        });
-        
-        if (error) {
-          if (error.message.includes("rate limit")) {
-            throw new Error("Please wait a moment before trying again");
-          }
-          throw error;
-        }
-
-        // If we have a user after signup, they have access immediately
-        if (data.user) {
-          toast.success("Account created successfully!");
-          navigate("/market");
-        } else {
-          toast.error("Something went wrong during signup");
-        }
+        toast.success('Successfully signed in!');
+        navigate('/market');
       }
     } catch (error: any) {
-      let errorMessage = error.message;
-      if (error.message.includes("rate limit") || error.message.includes("429")) {
-        errorMessage = "Please wait a moment before trying again";
-      }
-      toast.error(errorMessage);
+      toast.error(error.message);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            {isLogin ? t("Sign in to your account") : t("Create your account")}
-          </h2>
-        </div>
-        <form className="mt-8 space-y-6" onSubmit={handleAuth}>
-          <div className="rounded-md shadow-sm space-y-4">
-            <div>
-              <Label htmlFor="email">{t("Email address")}</Label>
+      <Card className="w-full max-w-md">
+        <CardHeader>
+          <CardTitle>{isSignUp ? 'Create Account' : 'Sign In'}</CardTitle>
+          <CardDescription>
+            {isSignUp 
+              ? 'Create a new account to access the market' 
+              : 'Sign in to your account to access the market'}
+          </CardDescription>
+        </CardHeader>
+        <form onSubmit={handleAuth}>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
-                name="email"
                 type="email"
-                required
+                placeholder="Enter your email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Email address"
+                required
               />
             </div>
-            <div>
-              <Label htmlFor="password">{t("Password")}</Label>
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
-                name="password"
                 type="password"
-                required
+                placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Password"
+                required
               />
             </div>
-          </div>
-
-          <div>
-            <Button
-              type="submit"
-              disabled={loading}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#721244] hover:bg-[#5d0f37] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          </CardContent>
+          <CardFooter className="flex flex-col space-y-4">
+            <Button 
+              type="submit" 
+              className="w-full bg-[#721244] hover:bg-[#5d0f37]"
+              disabled={isLoading}
             >
-              {loading ? "Loading..." : isLogin ? t("Sign in") : t("Sign up")}
+              {isLoading ? 'Loading...' : isSignUp ? 'Sign Up' : 'Sign In'}
             </Button>
-          </div>
-
-          <div className="text-center">
-            <button
+            <Button
               type="button"
-              onClick={() => setIsLogin(!isLogin)}
-              className="text-sm text-indigo-600 hover:text-indigo-500"
+              variant="ghost"
+              onClick={() => setIsSignUp(!isSignUp)}
+              className="w-full"
             >
-              {isLogin
-                ? t("Don't have an account? Sign up")
-                : t("Already have an account? Sign in")}
-            </button>
-          </div>
+              {isSignUp 
+                ? 'Already have an account? Sign In' 
+                : "Don't have an account? Sign Up"}
+            </Button>
+          </CardFooter>
         </form>
-      </div>
+      </Card>
     </div>
   );
 };
