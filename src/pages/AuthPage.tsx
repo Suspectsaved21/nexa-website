@@ -25,7 +25,7 @@ const AuthPage = () => {
           email,
           password,
         });
-        if (error) throw error;
+       if (error) throw  error;
         toast.success('Check your email to confirm your account!');
       } else {
         const { error } = await supabase.auth.signInWithPassword({
