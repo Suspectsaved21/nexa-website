@@ -8,11 +8,11 @@ import { toast } from "sonner";
 import { useCart } from "@/hooks/useCart";
 import { loadStripe } from "@stripe/stripe-js";
 import { supabase } from "@/integrations/supabase/client";
+import { LoadingSpinner } from "@/components/LoadingSpinner";
 
-// Initialize Stripe
+// Initialize Stripe with your publishable key
 const stripePromise = loadStripe('pk_test_51OxJdHEC2wZDatvOsWZz9KyaWyyjCfL5JwL4RAnGqtmRbWsxKBMxfMPe40xeF4xdXGAjwLwXBFbqBrMf4iUlUynF00i9k6LzBs');
 
-// Define the cart item with additional product details
 interface CartItemWithDetails {
   id: string;
   product_id: number;
@@ -47,68 +47,57 @@ const CheckoutPage = () => {
     setIsLoading(false);
   }, [cartItems]);
 
-  const calculateTotal = () => {
-    return itemsWithDetails.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  };
-
   const handleCheckout = async () => {
     try {
       setIsProcessing(true);
-      
-      // Create a Checkout Session
+
+      // Call our Supabase Edge Function to create a Stripe checkout session
       const { data, error } = await supabase.functions.invoke('create-payment-intent', {
-        body: { 
-          amount: calculateTotal(),
-          currency: 'usd'
-        },
+        body: { items: itemsWithDetails },
       });
 
-      if (error) {
-        console.error('Supabase function error:', error);
-        throw new Error('Failed to create checkout session');
-      }
+      if (error) throw new Error('Failed to create checkout session');
+      if (!data?.sessionId) throw new Error('No session ID received');
 
-      if (!data?.sessionId) {
-        console.error('No session ID received:', data);
-        throw new Error('Invalid checkout session');
-      }
-
-      // Load Stripe
+      // Get Stripe instance
       const stripe = await stripePromise;
-      if (!stripe) {
-        throw new Error('Stripe failed to initialize');
-      }
+      if (!stripe) throw new Error('Could not initialize Stripe');
 
       // Redirect to Stripe Checkout
       const { error: stripeError } = await stripe.redirectToCheckout({
-        sessionId: data.sessionId
+        sessionId: data.sessionId,
       });
 
-      if (stripeError) {
-        console.error('Stripe redirect error:', stripeError);
-        throw stripeError;
-      }
+      if (stripeError) throw stripeError;
     } catch (error) {
-      console.error('Payment error:', error);
-      toast.error(error instanceof Error ? error.message : 'Payment failed. Please try again.');
+      console.error('Checkout error:', error);
+      toast.error('Payment failed. Please try again.');
     } finally {
       setIsProcessing(false);
     }
   };
 
   useEffect(() => {
-    // Check for success/canceled URL parameters
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('success')) {
+    const query = new URLSearchParams(window.location.search);
+    
+    if (query.get('success')) {
       toast.success('Payment successful! Thank you for your purchase.');
+      // Clear cart and redirect to market
+      // Add your cart clearing logic here if needed
       navigate('/market');
-    } else if (urlParams.get('canceled')) {
-      toast.error('Payment canceled.');
+    }
+    
+    if (query.get('canceled')) {
+      toast.error('Payment was canceled.');
     }
   }, [navigate]);
 
   if (isLoading) {
-    return <div className="container mx-auto px-4 py-8 mt-16">Loading...</div>;
+    return (
+      <div className="container mx-auto px-4 py-8 mt-16 flex justify-center">
+        <LoadingSpinner />
+      </div>
+    );
   }
 
   return (
@@ -138,6 +127,7 @@ const CheckoutPage = () => {
                   variant="outline"
                   size="icon"
                   onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                  disabled={isProcessing}
                 >
                   <Minus className="h-4 w-4" />
                 </Button>
@@ -146,6 +136,7 @@ const CheckoutPage = () => {
                   variant="outline"
                   size="icon"
                   onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                  disabled={isProcessing}
                 >
                   <Plus className="h-4 w-4" />
                 </Button>
@@ -153,6 +144,7 @@ const CheckoutPage = () => {
                   variant="destructive"
                   size="icon"
                   onClick={() => removeFromCart(item.id)}
+                  disabled={isProcessing}
                 >
                   <Trash2 className="h-4 w-4" />
                 </Button>
@@ -167,7 +159,9 @@ const CheckoutPage = () => {
           <div className="mt-6 p-4 bg-white rounded-lg shadow">
             <div className="flex justify-between items-center mb-4">
               <span className="text-xl font-semibold">Total:</span>
-              <span className="text-xl font-bold">${calculateTotal().toFixed(2)}</span>
+              <span className="text-xl font-bold">
+                ${itemsWithDetails.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2)}
+              </span>
             </div>
             <Button 
               onClick={handleCheckout} 
