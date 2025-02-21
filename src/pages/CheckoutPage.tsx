@@ -6,12 +6,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { Plus, Minus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { useCart } from "@/hooks/useCart";
-import { loadStripe } from "@stripe/stripe-js";
-import { supabase } from "@/integrations/supabase/client";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
-
-// Initialize Stripe with your publishable key
-const stripePromise = loadStripe('pk_test_51OxJdHEC2wZDatvOsWZz9KyaWyyjCfL5JwL4RAnGqtmRbWsxKBMxfMPe40xeF4xdXGAjwLwXBFbqBrMf4iUlUynF00i9k6LzBs');
 
 interface CartItemWithDetails {
   id: string;
@@ -50,60 +45,17 @@ const CheckoutPage = () => {
   const handleCheckout = async () => {
     try {
       setIsProcessing(true);
-      console.log('Starting checkout process');
-
-      // Call our Supabase Edge Function to create a Stripe checkout session
-      const { data, error } = await supabase.functions.invoke('create-payment-intent', {
-        body: { items: itemsWithDetails },
-      });
-
-      console.log('Edge function response:', { data, error });
-
-      if (error) {
-        console.error('Supabase function error:', error);
-        throw new Error(error.message || 'Failed to create checkout session');
-      }
-
-      if (!data?.sessionId) {
-        console.error('No session ID received:', data);
-        throw new Error('No session ID received from server');
-      }
-
-      // Get Stripe instance
-      const stripe = await stripePromise;
-      if (!stripe) {
-        throw new Error('Could not initialize Stripe');
-      }
-
-      // Redirect to Stripe Checkout
-      const { error: stripeError } = await stripe.redirectToCheckout({
-        sessionId: data.sessionId,
-      });
-
-      if (stripeError) {
-        console.error('Stripe redirect error:', stripeError);
-        throw stripeError;
-      }
+      // Simulating checkout process
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      toast.success('Order placed successfully!');
+      navigate('/market');
     } catch (error) {
       console.error('Checkout error:', error);
-      toast.error('Payment failed. Please try again.');
+      toast.error('Failed to place order. Please try again.');
     } finally {
       setIsProcessing(false);
     }
   };
-
-  useEffect(() => {
-    const query = new URLSearchParams(window.location.search);
-    
-    if (query.get('success')) {
-      toast.success('Payment successful! Thank you for your purchase.');
-      navigate('/market');
-    }
-    
-    if (query.get('canceled')) {
-      toast.error('Payment was canceled.');
-    }
-  }, [navigate]);
 
   if (isLoading) {
     return (
@@ -181,7 +133,7 @@ const CheckoutPage = () => {
               className="w-full bg-[#721244] hover:bg-[#5d0f37]"
               disabled={isProcessing}
             >
-              {isProcessing ? 'Processing...' : 'Proceed to Payment'}
+              {isProcessing ? 'Processing...' : 'Place Order'}
             </Button>
           </div>
         </div>
