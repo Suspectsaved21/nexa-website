@@ -54,10 +54,8 @@ const LandingPage = () => {
     {
       id: 3,
       name: "iPhone 14",
-      price: 399,
-     
-      
-      
+      price: 399.00,
+      image: "/lovable-uploads/54a95ad7-85b3-4455-a167-c94194096831.png"
     },
     {
       id: 4,
@@ -111,3 +109,4 @@ const LandingPage = () => {
 };
 
 export default LandingPage;
+
