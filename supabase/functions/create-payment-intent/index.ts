@@ -1,6 +1,6 @@
 
-import { stripe } from 'https://esm.sh/v128/@stripe/stripe-js@2.1.11';
-import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import Stripe from "https://esm.sh/stripe@12.0.0?target=deno";
 
 const stripeSecretKey = Deno.env.get('STRIPE_SECRET_KEY');
 if (!stripeSecretKey) {
@@ -9,7 +9,6 @@ if (!stripeSecretKey) {
 
 const stripe = new Stripe(stripeSecretKey, {
   apiVersion: '2023-10-16',
-  httpClient: Deno.createHttpClient(),
 });
 
 const corsHeaders = {
@@ -93,4 +92,3 @@ serve(async (req) => {
     );
   }
 });
-

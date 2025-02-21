@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -85,7 +86,7 @@ const CheckoutPage = () => {
       }
     } catch (error) {
       console.error('Checkout error:', error);
-      toast.error(error.message || 'Payment failed. Please try again.');
+      toast.error('Payment failed. Please try again.');
     } finally {
       setIsProcessing(false);
     }
@@ -96,8 +97,6 @@ const CheckoutPage = () => {
     
     if (query.get('success')) {
       toast.success('Payment successful! Thank you for your purchase.');
-      // Clear cart and redirect to market
-      // Add your cart clearing logic here if needed
       navigate('/market');
     }
     
