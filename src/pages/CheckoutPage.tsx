@@ -7,6 +7,8 @@ import { Plus, Minus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { useCart } from "@/hooks/useCart";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@supabase/auth-helpers-react";
 
 interface CartItemWithDetails {
   id: string;
@@ -24,6 +26,7 @@ const CheckoutPage = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const { cartItems, updateQuantity, removeFromCart } = useCart();
   const [itemsWithDetails, setItemsWithDetails] = useState<CartItemWithDetails[]>([]);
+  const user = useAuth();
 
   useEffect(() => {
     const demoProducts = {
@@ -44,9 +47,34 @@ const CheckoutPage = () => {
 
   const handleCheckout = async () => {
     try {
+      if (!user) {
+        toast.error('Please login to complete your purchase');
+        navigate('/auth');
+        return;
+      }
+
       setIsProcessing(true);
-      // Simulating checkout process
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      const totalAmount = itemsWithDetails.reduce((sum, item) => 
+        sum + (item.price * item.quantity), 0
+      );
+
+      // Create order in Supabase
+      const { data: order, error: orderError } = await supabase
+        .from('orders')
+        .insert([{
+          user_id: user.id,
+          amount: totalAmount,
+          status: 'completed'
+        }])
+        .select()
+        .single();
+
+      if (orderError) {
+        console.error('Error creating order:', orderError);
+        throw new Error('Failed to create order');
+      }
+
       toast.success('Order placed successfully!');
       navigate('/market');
     } catch (error) {
