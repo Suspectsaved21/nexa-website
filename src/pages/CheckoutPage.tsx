@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -50,28 +49,43 @@ const CheckoutPage = () => {
   const handleCheckout = async () => {
     try {
       setIsProcessing(true);
+      console.log('Starting checkout process');
 
       // Call our Supabase Edge Function to create a Stripe checkout session
       const { data, error } = await supabase.functions.invoke('create-payment-intent', {
         body: { items: itemsWithDetails },
       });
 
-      if (error) throw new Error('Failed to create checkout session');
-      if (!data?.sessionId) throw new Error('No session ID received');
+      console.log('Edge function response:', { data, error });
+
+      if (error) {
+        console.error('Supabase function error:', error);
+        throw new Error(error.message || 'Failed to create checkout session');
+      }
+
+      if (!data?.sessionId) {
+        console.error('No session ID received:', data);
+        throw new Error('No session ID received from server');
+      }
 
       // Get Stripe instance
       const stripe = await stripePromise;
-      if (!stripe) throw new Error('Could not initialize Stripe');
+      if (!stripe) {
+        throw new Error('Could not initialize Stripe');
+      }
 
       // Redirect to Stripe Checkout
       const { error: stripeError } = await stripe.redirectToCheckout({
         sessionId: data.sessionId,
       });
 
-      if (stripeError) throw stripeError;
+      if (stripeError) {
+        console.error('Stripe redirect error:', stripeError);
+        throw stripeError;
+      }
     } catch (error) {
       console.error('Checkout error:', error);
-      toast.error('Payment failed. Please try again.');
+      toast.error(error.message || 'Payment failed. Please try again.');
     } finally {
       setIsProcessing(false);
     }
