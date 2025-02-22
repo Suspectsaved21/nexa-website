@@ -16,7 +16,8 @@ import {
 } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
+// Initialize Stripe with the publishable key
+const stripePromise = loadStripe('pk_test_51OdAmJDm3zF6RmDdXlp6zMoSlOCHLFIDEaRgVu6eE3LNzpeGuYwYnxzaU8TjmcKLMEOBvrZUyH8lAHJvZcadgpkk00TRDtMw3g');
 
 interface CartItemWithDetails {
   id: string;

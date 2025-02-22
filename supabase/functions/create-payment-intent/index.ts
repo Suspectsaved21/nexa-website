@@ -4,75 +4,47 @@ import { stripe } from "../_shared/stripe.ts";
 import { corsHeaders } from "../_shared/cors.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.7.1";
 
-const handler = async (req: Request) => {
+serve(async (req) => {
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders });
+  }
+
   try {
-    if (req.method === "OPTIONS") {
-      return new Response("ok", { headers: corsHeaders });
-    }
-
-    const supabaseClient = createClient(
-      Deno.env.get('SUPABASE_URL')!,
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
-    );
-
     const { items, userId } = await req.json();
-    console.log('Received request:', { items, userId });
-
-    if (!userId) {
-      return new Response(
-        JSON.stringify({ error: "User not authenticated" }),
-        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+    
+    if (!items || !userId) {
+      throw new Error('Missing items or user ID');
     }
 
-    const amount = items.reduce((sum: number, item: any) => 
-      sum + (item.price * item.quantity), 0
-    ) * 100; // Convert to cents
+    // Calculate order amount
+    const amount = items.reduce((sum: number, item: any) => {
+      return sum + (item.price * item.quantity);
+    }, 0);
 
-    console.log('Creating payment intent for amount:', amount);
-
+    // Create payment intent
     const paymentIntent = await stripe.paymentIntents.create({
-      amount,
-      currency: "usd",
-      automatic_payment_methods: {
-        enabled: true,
-      },
+      amount: Math.round(amount * 100), // Convert to cents
+      currency: 'usd',
       metadata: {
         userId,
       },
     });
 
-    // Create order in database
-    const { data: order, error: orderError } = await supabaseClient
-      .from('orders')
-      .insert([{
-        user_id: userId,
-        amount: amount / 100, // Store in dollars
-        payment_intent_id: paymentIntent.id,
-        status: 'pending',
-        payment_status: 'pending'
-      }])
-      .select()
-      .single();
-
-    if (orderError) {
-      console.error('Error creating order:', orderError);
-      throw new Error('Failed to create order');
-    }
-
-    console.log('Successfully created order:', order);
-
+    // Return the client secret
     return new Response(
       JSON.stringify({ clientSecret: paymentIntent.client_secret }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        status: 200,
+      }
     );
   } catch (error) {
-    console.error('Error:', error);
     return new Response(
       JSON.stringify({ error: error.message }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        status: 400,
+      }
     );
   }
-};
-
-serve(handler);
+});
