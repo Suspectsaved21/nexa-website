@@ -1,16 +1,13 @@
 
-import { serve } from "https://deno.fresh.runtime.dev";
+import { serve } from "https://deno.land/std@0.177.1/http/server.ts";
 import { stripe } from "../_shared/stripe.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.7.1";
 
 const handler = async (req: Request) => {
   try {
-    const signature = req.headers.get("stripe-signature");
-    if (!signature) {
-      return new Response("No signature provided", { status: 400 });
-    }
-
+    const signature = req.headers.get("stripe-signature")!;
     const body = await req.text();
+    
     const webhookSecret = Deno.env.get("STRIPE_WEBHOOK_SECRET");
     const event = stripe.webhooks.constructEvent(body, signature, webhookSecret!);
 
@@ -21,7 +18,7 @@ const handler = async (req: Request) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
     );
 
-    // Check if we've already processed this event
+    // Check if event was already processed
     const { data: existingEvent } = await supabaseClient
       .from('stripe_webhook_events')
       .select()
@@ -33,7 +30,7 @@ const handler = async (req: Request) => {
       return new Response("Event already processed", { status: 200 });
     }
 
-    // Store the event
+    // Store the webhook event
     await supabaseClient
       .from('stripe_webhook_events')
       .insert([{

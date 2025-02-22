@@ -1,5 +1,5 @@
 
-import { serve } from "https://deno.fresh.runtime.dev";
+import { serve } from "https://deno.land/std@0.177.1/http/server.ts";
 import { stripe } from "../_shared/stripe.ts";
 import { corsHeaders } from "../_shared/cors.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.7.1";

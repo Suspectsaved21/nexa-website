@@ -91,7 +91,7 @@ const CheckoutPage = () => {
     });
 
     // Set up auth state listener
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user ?? null);
     });
 
@@ -151,6 +151,19 @@ const CheckoutPage = () => {
     );
   }
 
+  if (!user) {
+    return (
+      <div className="container mx-auto px-4 py-8 mt-16">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold mb-4">Please log in to continue</h2>
+          <Button onClick={() => navigate("/auth")} className="bg-[#721244] hover:bg-[#5d0f37]">
+            Go to Login
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="container mx-auto px-4 py-8 mt-16">
       <h1 className="text-3xl font-bold mb-8">{t("Checkout")}</h1>
@@ -178,7 +191,6 @@ const CheckoutPage = () => {
                   variant="outline"
                   size="icon"
                   onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                  disabled={!stripe}
                 >
                   <Minus className="h-4 w-4" />
                 </Button>
@@ -187,7 +199,6 @@ const CheckoutPage = () => {
                   variant="outline"
                   size="icon"
                   onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                  disabled={!stripe}
                 >
                   <Plus className="h-4 w-4" />
                 </Button>
@@ -195,7 +206,6 @@ const CheckoutPage = () => {
                   variant="destructive"
                   size="icon"
                   onClick={() => removeFromCart(item.id)}
-                  disabled={!stripe}
                 >
                   <Trash2 className="h-4 w-4" />
                 </Button>
