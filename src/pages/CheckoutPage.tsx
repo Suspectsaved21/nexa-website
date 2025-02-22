@@ -3,21 +3,12 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Plus, Minus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { useCart } from "@/hooks/useCart";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { supabase } from "@/integrations/supabase/client";
-import {
-  Elements,
-  PaymentElement,
-  useStripe,
-  useElements
-} from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
-
-// Initialize Stripe with the publishable key
-const stripePromise = loadStripe('pk_test_51OdAmJDm3zF6RmDdXlp6zMoSlOCHLFIDEaRgVu6eE3LNzpeGuYwYnxzaU8TjmcKLMEOBvrZUyH8lAHJvZcadgpkk00TRDtMw3g');
+import { CartItem } from "@/components/checkout/CartItem";
+import { CartSummary } from "@/components/checkout/CartSummary";
 
 interface CartItemWithDetails {
   id: string;
@@ -26,54 +17,6 @@ interface CartItemWithDetails {
   name: string;
   price: number;
   image: string;
-}
-
-function CheckoutForm({ clientSecret }: { clientSecret: string }) {
-  const stripe = useStripe();
-  const elements = useElements();
-  const [isProcessing, setIsProcessing] = useState(false);
-  const navigate = useNavigate();
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!stripe || !elements) {
-      return;
-    }
-
-    setIsProcessing(true);
-
-    try {
-      const { error } = await stripe.confirmPayment({
-        elements,
-        confirmParams: {
-          return_url: `${window.location.origin}/market`,
-        },
-      });
-
-      if (error) {
-        toast.error(error.message);
-      }
-    } catch (err) {
-      console.error('Payment error:', err);
-      toast.error('Payment failed. Please try again.');
-    } finally {
-      setIsProcessing(false);
-    }
-  };
-
-  return (
-    <form onSubmit={handleSubmit} className="mt-6">
-      <PaymentElement />
-      <Button 
-        type="submit"
-        disabled={!stripe || isProcessing}
-        className="w-full mt-4 bg-[#721244] hover:bg-[#5d0f37]"
-      >
-        {isProcessing ? 'Processing...' : 'Pay Now'}
-      </Button>
-    </form>
-  );
 }
 
 const CheckoutPage = () => {
@@ -86,12 +29,10 @@ const CheckoutPage = () => {
   const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
-    // Get the current user
     supabase.auth.getUser().then(({ data: { user } }) => {
       setUser(user);
     });
 
-    // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user ?? null);
     });
@@ -179,59 +120,18 @@ const CheckoutPage = () => {
       ) : (
         <div className="grid grid-cols-1 gap-6">
           {itemsWithDetails.map((item) => (
-            <div key={item.id} className="flex items-center gap-4 p-4 bg-white rounded-lg shadow">
-              <img src={item.image} alt={item.name} className="w-24 h-24 object-contain" />
-              
-              <div className="flex-1">
-                <h3 className="text-lg font-semibold">{item.name}</h3>
-                <p className="text-gray-600">${item.price}</p>
-              </div>
-              
-              <div className="flex items-center gap-2">
-                <Button 
-                  variant="outline"
-                  size="icon"
-                  onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                >
-                  <Minus className="h-4 w-4" />
-                </Button>
-                <span className="w-8 text-center">{item.quantity}</span>
-                <Button 
-                  variant="outline"
-                  size="icon"
-                  onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                >
-                  <Plus className="h-4 w-4" />
-                </Button>
-                <Button 
-                  variant="destructive"
-                  size="icon"
-                  onClick={() => removeFromCart(item.id)}
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              </div>
-              
-              <div className="text-right min-w-[100px]">
-                <p className="font-semibold">${(item.price * item.quantity).toFixed(2)}</p>
-              </div>
-            </div>
+            <CartItem
+              key={item.id}
+              {...item}
+              onUpdateQuantity={updateQuantity}
+              onRemove={removeFromCart}
+            />
           ))}
           
-          <div className="mt-6 p-4 bg-white rounded-lg shadow">
-            <div className="flex justify-between items-center mb-4">
-              <span className="text-xl font-semibold">Total:</span>
-              <span className="text-xl font-bold">
-                ${itemsWithDetails.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2)}
-              </span>
-            </div>
-
-            {clientSecret && (
-              <Elements stripe={stripePromise} options={{ clientSecret }}>
-                <CheckoutForm clientSecret={clientSecret} />
-              </Elements>
-            )}
-          </div>
+          <CartSummary 
+            items={itemsWithDetails}
+            clientSecret={clientSecret}
+          />
         </div>
       )}
     </div>
