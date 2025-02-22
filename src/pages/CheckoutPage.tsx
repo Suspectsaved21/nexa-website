@@ -8,6 +8,15 @@ import { toast } from "sonner";
 import { useCart } from "@/hooks/useCart";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { supabase } from "@/integrations/supabase/client";
+import {
+  Elements,
+  PaymentElement,
+  useStripe,
+  useElements
+} from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 interface CartItemWithDetails {
   id: string;
@@ -18,11 +27,59 @@ interface CartItemWithDetails {
   image: string;
 }
 
+function CheckoutForm({ clientSecret }: { clientSecret: string }) {
+  const stripe = useStripe();
+  const elements = useElements();
+  const [isProcessing, setIsProcessing] = useState(false);
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!stripe || !elements) {
+      return;
+    }
+
+    setIsProcessing(true);
+
+    try {
+      const { error } = await stripe.confirmPayment({
+        elements,
+        confirmParams: {
+          return_url: `${window.location.origin}/market`,
+        },
+      });
+
+      if (error) {
+        toast.error(error.message);
+      }
+    } catch (err) {
+      console.error('Payment error:', err);
+      toast.error('Payment failed. Please try again.');
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="mt-6">
+      <PaymentElement />
+      <Button 
+        type="submit"
+        disabled={!stripe || isProcessing}
+        className="w-full mt-4 bg-[#721244] hover:bg-[#5d0f37]"
+      >
+        {isProcessing ? 'Processing...' : 'Pay Now'}
+      </Button>
+    </form>
+  );
+}
+
 const CheckoutPage = () => {
   const { t } = useLanguage();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [clientSecret, setClientSecret] = useState("");
   const { cartItems, updateQuantity, removeFromCart } = useCart();
   const [itemsWithDetails, setItemsWithDetails] = useState<CartItemWithDetails[]>([]);
   const [user, setUser] = useState<any>(null);
@@ -60,45 +117,31 @@ const CheckoutPage = () => {
     setIsLoading(false);
   }, [cartItems]);
 
-  const handleCheckout = async () => {
-    try {
-      if (!user) {
-        toast.error('Please login to complete your purchase');
-        navigate('/auth');
-        return;
+  useEffect(() => {
+    const createPaymentIntent = async () => {
+      if (!user || itemsWithDetails.length === 0) return;
+
+      try {
+        const response = await supabase.functions.invoke('create-payment-intent', {
+          body: { 
+            items: itemsWithDetails,
+            userId: user.id
+          }
+        });
+
+        if (response.error) {
+          throw new Error(response.error.message);
+        }
+
+        setClientSecret(response.data.clientSecret);
+      } catch (error) {
+        console.error('Error creating payment intent:', error);
+        toast.error('Failed to initialize payment. Please try again.');
       }
+    };
 
-      setIsProcessing(true);
-      
-      const totalAmount = itemsWithDetails.reduce((sum, item) => 
-        sum + (item.price * item.quantity), 0
-      );
-
-      // Create order in Supabase
-      const { data: order, error: orderError } = await supabase
-        .from('orders')
-        .insert([{
-          user_id: user.id,
-          amount: totalAmount,
-          status: 'completed'
-        }])
-        .select()
-        .single();
-
-      if (orderError) {
-        console.error('Error creating order:', orderError);
-        throw new Error('Failed to create order');
-      }
-
-      toast.success('Order placed successfully!');
-      navigate('/market');
-    } catch (error) {
-      console.error('Checkout error:', error);
-      toast.error('Failed to place order. Please try again.');
-    } finally {
-      setIsProcessing(false);
-    }
-  };
+    createPaymentIntent();
+  }, [user, itemsWithDetails]);
 
   if (isLoading) {
     return (
@@ -135,7 +178,7 @@ const CheckoutPage = () => {
                   variant="outline"
                   size="icon"
                   onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                  disabled={isProcessing}
+                  disabled={!stripe}
                 >
                   <Minus className="h-4 w-4" />
                 </Button>
@@ -144,7 +187,7 @@ const CheckoutPage = () => {
                   variant="outline"
                   size="icon"
                   onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                  disabled={isProcessing}
+                  disabled={!stripe}
                 >
                   <Plus className="h-4 w-4" />
                 </Button>
@@ -152,7 +195,7 @@ const CheckoutPage = () => {
                   variant="destructive"
                   size="icon"
                   onClick={() => removeFromCart(item.id)}
-                  disabled={isProcessing}
+                  disabled={!stripe}
                 >
                   <Trash2 className="h-4 w-4" />
                 </Button>
@@ -171,13 +214,12 @@ const CheckoutPage = () => {
                 ${itemsWithDetails.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2)}
               </span>
             </div>
-            <Button 
-              onClick={handleCheckout} 
-              className="w-full bg-[#721244] hover:bg-[#5d0f37]"
-              disabled={isProcessing}
-            >
-              {isProcessing ? 'Processing...' : 'Place Order'}
-            </Button>
+
+            {clientSecret && (
+              <Elements stripe={stripePromise} options={{ clientSecret }}>
+                <CheckoutForm clientSecret={clientSecret} />
+              </Elements>
+            )}
           </div>
         </div>
       )}
