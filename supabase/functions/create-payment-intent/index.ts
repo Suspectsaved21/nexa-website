@@ -16,6 +16,7 @@ const handler = async (req: Request) => {
     );
 
     const { items, userId } = await req.json();
+    console.log('Received request:', { items, userId });
 
     if (!userId) {
       return new Response(
@@ -27,6 +28,8 @@ const handler = async (req: Request) => {
     const amount = items.reduce((sum: number, item: any) => 
       sum + (item.price * item.quantity), 0
     ) * 100; // Convert to cents
+
+    console.log('Creating payment intent for amount:', amount);
 
     const paymentIntent = await stripe.paymentIntents.create({
       amount,
@@ -46,7 +49,8 @@ const handler = async (req: Request) => {
         user_id: userId,
         amount: amount / 100, // Store in dollars
         payment_intent_id: paymentIntent.id,
-        status: 'pending'
+        status: 'pending',
+        payment_status: 'pending'
       }])
       .select()
       .single();
@@ -55,6 +59,8 @@ const handler = async (req: Request) => {
       console.error('Error creating order:', orderError);
       throw new Error('Failed to create order');
     }
+
+    console.log('Successfully created order:', order);
 
     return new Response(
       JSON.stringify({ clientSecret: paymentIntent.client_secret }),

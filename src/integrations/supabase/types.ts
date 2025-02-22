@@ -95,6 +95,8 @@ export type Database = {
           amount: number
           created_at: string
           id: string
+          payment_intent_id: string | null
+          payment_status: string | null
           session_id: string | null
           status: string
           updated_at: string
@@ -104,6 +106,8 @@ export type Database = {
           amount: number
           created_at?: string
           id?: string
+          payment_intent_id?: string | null
+          payment_status?: string | null
           session_id?: string | null
           status?: string
           updated_at?: string
@@ -113,6 +117,8 @@ export type Database = {
           amount?: number
           created_at?: string
           id?: string
+          payment_intent_id?: string | null
+          payment_status?: string | null
           session_id?: string | null
           status?: string
           updated_at?: string
@@ -168,6 +174,27 @@ export type Database = {
           rating?: number | null
           updated_at?: string
           user_id?: string | null
+        }
+        Relationships: []
+      }
+      stripe_webhook_events: {
+        Row: {
+          data: Json | null
+          id: string
+          processed_at: string | null
+          type: string
+        }
+        Insert: {
+          data?: Json | null
+          id: string
+          processed_at?: string | null
+          type: string
+        }
+        Update: {
+          data?: Json | null
+          id?: string
+          processed_at?: string | null
+          type?: string
         }
         Relationships: []
       }

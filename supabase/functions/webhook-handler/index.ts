@@ -14,6 +14,8 @@ const handler = async (req: Request) => {
     const webhookSecret = Deno.env.get("STRIPE_WEBHOOK_SECRET");
     const event = stripe.webhooks.constructEvent(body, signature, webhookSecret!);
 
+    console.log('Processing webhook event:', event.type);
+
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL')!,
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
@@ -27,6 +29,7 @@ const handler = async (req: Request) => {
       .single();
 
     if (existingEvent) {
+      console.log('Event already processed:', event.id);
       return new Response("Event already processed", { status: 200 });
     }
 
@@ -42,17 +45,29 @@ const handler = async (req: Request) => {
     // Handle specific events
     if (event.type === 'payment_intent.succeeded') {
       const paymentIntent = event.data.object;
+      console.log('Payment succeeded for payment intent:', paymentIntent.id);
       
       // Update order status
-      await supabaseClient
+      const { error: updateError } = await supabaseClient
         .from('orders')
-        .update({ status: 'completed', payment_status: 'paid' })
+        .update({ 
+          status: 'completed', 
+          payment_status: 'paid',
+          updated_at: new Date().toISOString()
+        })
         .eq('payment_intent_id', paymentIntent.id);
+
+      if (updateError) {
+        console.error('Error updating order:', updateError);
+        throw updateError;
+      }
+
+      console.log('Successfully updated order status for payment intent:', paymentIntent.id);
     }
 
     return new Response(JSON.stringify({ received: true }), { status: 200 });
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Error processing webhook:', error);
     return new Response(
       JSON.stringify({ error: error.message }),
       { status: 400 }
