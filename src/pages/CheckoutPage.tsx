@@ -8,7 +8,6 @@ import { toast } from "sonner";
 import { useCart } from "@/hooks/useCart";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@supabase/auth-helpers-react";
 
 interface CartItemWithDetails {
   id: string;
@@ -26,7 +25,23 @@ const CheckoutPage = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const { cartItems, updateQuantity, removeFromCart } = useCart();
   const [itemsWithDetails, setItemsWithDetails] = useState<CartItemWithDetails[]>([]);
-  const user = useAuth();
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    // Get the current user
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      setUser(user);
+    });
+
+    // Set up auth state listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
 
   useEffect(() => {
     const demoProducts = {
