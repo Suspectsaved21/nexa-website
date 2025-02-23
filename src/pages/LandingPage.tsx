@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { MarketHeader } from "@/components/market/MarketHeader";
@@ -13,23 +14,6 @@ const LandingPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { cartItems, addToCart, updateQuantity, getCartTotal } = useCart();
-
-  const allProducts = [
-    ...specials.map(item => ({ ...item, type: 'special' })),
-    ...deals.map(item => ({ ...item, type: 'deal' }))
-  ];
-
-  const handleSearch = (query: string) => {
-    setSearchQuery(query);
-    if (query.trim()) {
-      const searchResult = allProducts.find(product => 
-        product.name.toLowerCase().includes(query.toLowerCase())
-      );
-      if (searchResult) {
-        navigate(`/product/${searchResult.id}?type=${searchResult.type}`);
-      }
-    }
-  };
 
   const specials = [
     {
@@ -103,6 +87,23 @@ const LandingPage = () => {
     }
   ];
 
+  const allProducts = [
+    ...specials.map(item => ({ ...item, type: 'special' })),
+    ...deals.map(item => ({ ...item, type: 'deal' }))
+  ];
+
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+    if (query.trim()) {
+      const searchResult = allProducts.find(product => 
+        product.name.toLowerCase().includes(query.toLowerCase())
+      );
+      if (searchResult) {
+        navigate(`/product/${searchResult.id}?type=${searchResult.type}`);
+      }
+    }
+  };
+
   const incrementItem = (dealId: number) => {
     const item = cartItems.find(item => item.product_id === dealId);
     if (item) {
@@ -119,6 +120,24 @@ const LandingPage = () => {
     }
   };
 
+  const marketCategories = [
+    {
+      name: "Electronics",
+      link: "electronics",
+      image: "/lovable-uploads/54a95ad7-85b3-4455-a167-c94194096831.png"
+    },
+    {
+      name: "Fashion",
+      link: "fashion",
+      image: "/lovable-uploads/60120fed-7730-46e6-8340-5f0f49df8aa2.png"
+    },
+    {
+      name: "Books",
+      link: "books",
+      image: "/lovable-uploads/cd8156df-b27f-4f5a-85bc-d8953311e8d2.png"
+    }
+  ];
+
   return (
     <div className="relative min-h-screen">
       <MarketHeader
@@ -131,7 +150,7 @@ const LandingPage = () => {
       
       <div className="relative pt-16 md:pt-16">
         <MarketHero />
-        <MarketVideoSection />
+        <MarketVideoSection categories={marketCategories} />
         <MarketSpecials 
           specials={specials}
           cartItems={cartItems}
@@ -152,3 +171,4 @@ const LandingPage = () => {
 };
 
 export default LandingPage;
+
