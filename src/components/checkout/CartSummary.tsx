@@ -1,22 +1,9 @@
-
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { CheckoutForm } from "./CheckoutForm";
+import { CartSummaryProps } from "@/types/checkout";
 
 const stripePromise = loadStripe('pk_test_51OdAmJDm3zF6RmDdXlp6zMoSlOCHLFIDEaRgVu6eE3LNzpeGuYwYnxzaU8TjmcKLMEOBvrZUyH8lAHJvZcadgpkk00TRDtMw3g');
-
-interface CartItemWithDetails {
-  id: string;
-  product_id: number;
-  quantity: number;
-  name: string;
-  price: number;
-}
-
-interface CartSummaryProps {
-  items: CartItemWithDetails[];
-  clientSecret: string;
-}
 
 export const CartSummary = ({ items, clientSecret }: CartSummaryProps) => {
   const total = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);

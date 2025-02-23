@@ -1,16 +1,6 @@
-
 import { Button } from "@/components/ui/button";
 import { Plus, Minus, Trash2 } from "lucide-react";
-
-interface CartItemProps {
-  id: string;
-  name: string;
-  price: number;
-  image: string;
-  quantity: number;
-  onUpdateQuantity: (id: string, quantity: number) => void;
-  onRemove: (id: string) => void;
-}
+import { CartItemProps } from "@/types/checkout";
 
 export const CartItem = ({
   id,

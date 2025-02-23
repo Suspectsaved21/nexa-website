@@ -1,12 +1,6 @@
-
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
-
-export interface CartItem {
-  id: string;
-  product_id: number;
-  quantity: number;
-}
+import { CartItem } from '@/types/checkout';
 
 export const useCart = () => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
