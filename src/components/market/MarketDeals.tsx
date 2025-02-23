@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Plus, Minus } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { CartItem } from "@/hooks/useCart";
+import { CartItem } from "@/types/checkout";
 
 interface Deal {
   id: number;
@@ -33,13 +33,15 @@ export const MarketDeals = ({ deals, cartItems, incrementItem, decrementItem }: 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
           {deals.map((deal) => (
             <div key={deal.id} className="bg-white p-4 md:p-6 rounded-lg shadow-md border border-gray-200">
-              <img 
-                src={deal.image} 
-                alt={deal.name}
-                className="w-full h-32 md:h-40 object-contain mb-4"
-              />
-              <h3 className="text-base md:text-lg font-semibold mb-2">{deal.name}</h3>
-              <p className="text-lg md:text-xl font-bold text-[#721244] mb-4">${deal.price}</p>
+              <div className="aspect-square mb-4 relative">
+                <img 
+                  src={deal.image} 
+                  alt={deal.name}
+                  className="w-full h-full object-contain"
+                />
+              </div>
+              <h3 className="text-base md:text-lg font-semibold mb-2 line-clamp-2 h-12">{deal.name}</h3>
+              <p className="text-lg md:text-xl font-bold text-[#721244] mb-4">€{deal.price.toFixed(2)}</p>
               <div className="flex items-center justify-between gap-2">
                 <button 
                   onClick={() => decrementItem(deal.id)}
