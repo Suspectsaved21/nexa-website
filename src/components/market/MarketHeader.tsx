@@ -26,6 +26,13 @@ export const MarketHeader = ({
   const { t, language, setLanguage } = useLanguage();
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
 
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      setSearchQuery(searchQuery);
+    }
+  };
+
   const handleSignOut = async () => {
     const { error } = await supabase.auth.signOut();
     if (error) {
@@ -95,15 +102,7 @@ export const MarketHeader = ({
         {/* Search and Cart */}
         <div className={`flex items-center gap-4 ${isSearchExpanded ? 'w-full' : 'w-full md:w-auto'}`}>
           <div className={`flex items-center gap-2 ${isSearchExpanded ? 'w-full' : 'flex-1 md:flex-none'}`}>
-            {!isSearchExpanded && (
-              <button
-                onClick={() => setIsSearchExpanded(true)}
-                className="md:hidden bg-transparent border-none text-white"
-              >
-                <Search className="h-6 w-6" />
-              </button>
-            )}
-            <div className={`flex items-center gap-2 ${isSearchExpanded ? 'w-full' : 'hidden md:flex'}`}>
+            <form onSubmit={handleSearchSubmit} className="flex items-center gap-2 w-full">
               <Input
                 type="search"
                 placeholder={t("searchPlaceholder")}
@@ -112,20 +111,14 @@ export const MarketHeader = ({
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onFocus={() => setIsSearchExpanded(true)}
               />
-              {isSearchExpanded ? (
-                <Button 
-                  variant="ghost" 
-                  className="md:hidden text-white p-2"
-                  onClick={() => setIsSearchExpanded(false)}
-                >
-                  <X className="h-6 w-6" />
-                </Button>
-              ) : (
-                <Button variant="secondary" className="bg-[#721244] text-white hover:bg-[#5d0f37] whitespace-nowrap">
-                  {t("search")}
-                </Button>
-              )}
-            </div>
+              <Button 
+                type="submit"
+                variant="secondary" 
+                className="bg-[#721244] text-white hover:bg-[#5d0f37] whitespace-nowrap"
+              >
+                {t("search")}
+              </Button>
+            </form>
           </div>
           
           <div className={`${isSearchExpanded ? 'hidden md:flex' : 'flex'} items-center gap-4`}>

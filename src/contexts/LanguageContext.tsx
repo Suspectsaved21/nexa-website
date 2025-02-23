@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, ReactNode } from "react";
 import { translations, Language, TranslationKey } from "@/translations";
 
 type LanguageContextType = {
@@ -23,14 +23,8 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
     return translations[language][key as TranslationKey] || key;
   };
 
-  const value = {
-    language,
-    setLanguage,
-    t,
-  };
-
   return (
-    <LanguageContext.Provider value={value}>
+    <LanguageContext.Provider value={{ language, setLanguage, t }}>
       {children}
     </LanguageContext.Provider>
   );

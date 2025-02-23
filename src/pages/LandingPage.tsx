@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { MarketHeader } from "@/components/market/MarketHeader";
 import { MarketHero } from "@/components/market/MarketHero";
-import { MarketCategories } from "@/components/market/MarketCategories";
 import { MarketVideoSection } from "@/components/market/MarketVideoSection";
 import { MarketDeals } from "@/components/market/MarketDeals";
 import { MarketSpecials } from "@/components/market/MarketSpecials";
@@ -15,28 +14,22 @@ const LandingPage = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { cartItems, addToCart, updateQuantity, getCartTotal } = useCart();
 
-  const categories = [
-    {
-      name: "Electronics",
-      link: "electronics",
-      image: "/lovable-uploads/af68aec7-4213-409b-9e64-6ac17ade8a4b.png"
-    },
-    {
-      name: "Fashion",
-      link: "fashion",
-      image: "/lovable-uploads/2e1336e4-f9d9-4456-9b43-b0d6d4f2386f.png"
-    },
-    {
-      name: "Furniture",
-      link: "furniture",
-      image: "/lovable-uploads/cd8156df-b27f-4f5a-85bc-d8953311e8d2.png"
-    },
-    {
-      name: "Beauty",
-      link: "beauty",
-      image: "/lovable-uploads/c5c6c645-396c-4ebd-ad5b-237d295eb2d9.png"
-    }
+  const allProducts = [
+    ...specials.map(item => ({ ...item, type: 'special' })),
+    ...deals.map(item => ({ ...item, type: 'deal' }))
   ];
+
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+    if (query.trim()) {
+      const searchResult = allProducts.find(product => 
+        product.name.toLowerCase().includes(query.toLowerCase())
+      );
+      if (searchResult) {
+        navigate(`/product/${searchResult.id}?type=${searchResult.type}`);
+      }
+    }
+  };
 
   const specials = [
     {
@@ -130,7 +123,7 @@ const LandingPage = () => {
     <div className="relative min-h-screen">
       <MarketHeader
         searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
+        setSearchQuery={handleSearch}
         isMenuOpen={isMenuOpen}
         setIsMenuOpen={setIsMenuOpen}
         totalCartCount={getCartTotal()}
@@ -138,8 +131,7 @@ const LandingPage = () => {
       
       <div className="relative pt-16 md:pt-16">
         <MarketHero />
-        <MarketCategories categories={categories} />
-        <MarketVideoSection categories={categories} />
+        <MarketVideoSection />
         <MarketSpecials 
           specials={specials}
           cartItems={cartItems}
