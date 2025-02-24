@@ -25,12 +25,11 @@ export const MarketHeader = ({
 }: MarketHeaderProps) => {
   const navigate = useNavigate();
   const { t, language, setLanguage } = useLanguage();
-  const [isSearchExpanded, setIsSearchExpanded] = useState(false);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      setSearchQuery(searchQuery);
+      navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
     }
   };
 
