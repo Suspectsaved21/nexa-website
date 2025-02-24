@@ -43,17 +43,37 @@ const CheckoutPage = () => {
   }, []);
 
   useEffect(() => {
-    const demoProducts = {
-      1: { name: "Intermediate size basketball for men", price: 29.99, image: "/lovable-uploads/60120fed-7730-46e6-8340-5f0f49df8aa2.png" },
-      2: { name: "Unisex Loudon Lite Backpack", price: 32.95, image: "/lovable-uploads/af68aec7-4213-409b-9e64-6ac17ade8a4b.png" },
-      3: { name: "iPhone 14", price: 399, image: "/lovable-uploads/54a95ad7-85b3-4455-a167-c94194096831.png" },
-      4: { name: "Long sleeves shirt for women", price: 32.95, image: "/lovable-uploads/2e1336e4-f9d9-4456-9b43-b0d6d4f2386f.png" },
-    };
+    const specials = [
+      {
+        id: 101,
+        name: "iPhone 14",
+        price: 500.00,
+        image: "/lovable-uploads/417323af-6908-4ad4-a593-0471728e8f22.png"
+      },
+      // Add all your specials here
+    ];
 
-    const items = cartItems.map(item => ({
-      ...item,
-      ...demoProducts[item.product_id as keyof typeof demoProducts]
-    }));
+    const deals = [
+      {
+        id: 1,
+        name: "Suddenly Cotton Blue Eau de Parfum for Women 100ml EDP",
+        price: 10.00,
+        image: "/lovable-uploads/3dcdad9e-de18-4a65-9ca0-427fd3ac2025.png"
+      },
+      // Add all your deals here
+    ];
+
+    const allProducts = [...specials, ...deals];
+    
+    const items = cartItems.map(item => {
+      const product = allProducts.find(p => p.id === item.product_id);
+      return {
+        ...item,
+        name: product?.name || "Product not found",
+        price: product?.price || 0,
+        image: product?.image || ""
+      };
+    });
 
     setItemsWithDetails(items);
     setIsLoading(false);
