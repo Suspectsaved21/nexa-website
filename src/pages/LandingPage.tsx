@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { MarketHeader } from "@/components/market/MarketHeader";
 import { MarketHero } from "@/components/market/MarketHero";
@@ -85,21 +85,26 @@ const LandingPage = () => {
     }
   ];
 
-  const allProducts = [
+  const allProducts = useMemo(() => [
     ...specials.map(item => ({ ...item, type: 'special' })),
     ...deals.map(item => ({ ...item, type: 'deal' }))
-  ];
+  ], []);
+
+  const filteredProducts = useMemo(() => {
+    if (!searchQuery.trim()) return { filteredSpecials: specials, filteredDeals: deals };
+
+    const searchTerms = searchQuery.toLowerCase().split(' ');
+    const matchesSearch = (name: string) => 
+      searchTerms.every(term => name.toLowerCase().includes(term));
+
+    const filteredSpecials = specials.filter(item => matchesSearch(item.name));
+    const filteredDeals = deals.filter(item => matchesSearch(item.name));
+
+    return { filteredSpecials, filteredDeals };
+  }, [searchQuery, specials, deals]);
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
-    if (query.trim()) {
-      const searchResults = allProducts.filter(product => 
-        product.name.toLowerCase().includes(query.toLowerCase())
-      );
-      if (searchResults.length > 0) {
-        setSearchQuery(query);
-      }
-    }
   };
 
   const incrementItem = (dealId: number) => {
@@ -131,13 +136,13 @@ const LandingPage = () => {
       <div className="relative pt-16 md:pt-16">
         <MarketHero />
         <MarketSpecials 
-          specials={specials}
+          specials={filteredProducts.filteredSpecials}
           cartItems={cartItems}
           incrementItem={incrementItem}
           decrementItem={decrementItem}
         />
         <MarketDeals
-          deals={deals}
+          deals={filteredProducts.filteredDeals}
           cartItems={cartItems}
           incrementItem={incrementItem}
           decrementItem={decrementItem}

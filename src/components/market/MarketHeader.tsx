@@ -46,22 +46,14 @@ export const MarketHeader = ({
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-[#032e64] text-white">
       <div className="container mx-auto px-4 py-2 md:py-4">
-        <div className="flex flex-col md:flex-row items-center gap-2">
-          {/* Logo and Menu */}
-          <div className="w-full md:w-auto flex justify-between items-center">
-            <Link to="/" className="text-xl font-bold">
-              {t("nexa")}
-            </Link>
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="md:hidden"
-            >
-              <Menu className="h-6 w-6" />
-            </button>
-          </div>
+        <div className="flex items-center justify-between gap-4">
+          {/* Logo */}
+          <Link to="/" className="text-xl font-bold">
+            {t("nexa")}
+          </Link>
 
           {/* Search Bar - Full Width on Mobile */}
-          <div className="w-full md:flex-1 order-3 md:order-2">
+          <div className="flex-1 max-w-2xl mx-auto">
             <form onSubmit={handleSearchSubmit} className="flex gap-2">
               <Input
                 type="search"
@@ -81,12 +73,22 @@ export const MarketHeader = ({
             </form>
           </div>
 
-          {/* Cart and Language */}
-          <div className="flex items-center gap-4 order-2 md:order-3">
-            <Link to="/checkout" className="flex items-center gap-2">
-              <ShoppingCart className="h-6 w-6" />
-              <span className="sr-only md:not-sr-only">
-                {t("cart")} ({totalCartCount})
+          {/* Right Section: Cart, Language, Menu */}
+          <div className="flex items-center gap-4">
+            <Link 
+              to="/checkout" 
+              className="flex items-center gap-2 hover:text-gray-200 transition-colors"
+            >
+              <div className="relative">
+                <ShoppingCart className="h-6 w-6" />
+                {totalCartCount > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-[#721244] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                    {totalCartCount}
+                  </span>
+                )}
+              </div>
+              <span className="hidden md:inline">
+                {t("cart")}
               </span>
             </Link>
             
@@ -98,6 +100,13 @@ export const MarketHeader = ({
               <option value="en">EN</option>
               <option value="fr">FR</option>
             </select>
+
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="md:hidden"
+            >
+              <Menu className="h-6 w-6" />
+            </button>
           </div>
         </div>
 
