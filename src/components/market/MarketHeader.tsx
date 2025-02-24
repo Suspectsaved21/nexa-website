@@ -57,7 +57,7 @@ export const MarketHeader = ({
               <Input
                 type="search"
                 placeholder={t("searchPlaceholder")}
-                className="w-full"
+                className="w-full text-black bg-white placeholder:text-gray-500"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -137,3 +137,4 @@ export const MarketHeader = ({
 };
 
 export default MarketHeader;
+
