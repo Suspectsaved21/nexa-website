@@ -14,6 +14,8 @@ export const BuyNowButton = ({ productName, productImage, price, priceId }: BuyN
     try {
       setIsLoading(true);
       
+      console.log("Sending checkout request with:", { productName, productImage, price, priceId });
+      
       const { data, error } = await supabase.functions.invoke("create-checkout-session", {
         body: {
           productName,
@@ -26,12 +28,15 @@ export const BuyNowButton = ({ productName, productImage, price, priceId }: BuyN
       });
 
       if (error) {
+        console.error("Supabase function error:", error);
         throw new Error(error.message);
       }
 
       if (data?.url) {
+        console.log("Redirecting to Stripe checkout:", data.url);
         window.location.href = data.url;
       } else {
+        console.error("No URL returned from checkout session", data);
         throw new Error("Failed to create checkout session");
       }
     } catch (error) {
