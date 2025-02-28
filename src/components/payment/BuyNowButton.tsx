@@ -9,8 +9,16 @@ interface BuyNowButtonProps {
   className?: string;
 }
 
+// List of premium product IDs that should have a buy now button
+const premiumProductIds = [1, 3, 101, 103, 106, 107]; // Example IDs for premium products
+
 export const BuyNowButton: React.FC<BuyNowButtonProps> = ({ productId, className }) => {
   const navigate = useNavigate();
+  
+  // Only show the button for premium products
+  if (!premiumProductIds.includes(productId)) {
+    return null;
+  }
   
   const handleClick = () => {
     navigate(`/payment/${productId}`);
