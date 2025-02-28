@@ -2,9 +2,9 @@
 import React, { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 import { Toaster } from "sonner";
-import LoadingSpinner from "@/components/LoadingSpinner";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import { LoadingSpinner } from "@/components/LoadingSpinner";
+import { Navbar } from "@/components/Navbar";
+import { Footer } from "@/components/Footer";
 import "./App.css";
 
 // Lazy loaded components
