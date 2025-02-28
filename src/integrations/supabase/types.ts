@@ -111,7 +111,7 @@ export type Database = {
           session_id?: string | null
           status?: string
           updated_at?: string
-          user_id: string
+          user_id?: string
         }
         Update: {
           amount?: number

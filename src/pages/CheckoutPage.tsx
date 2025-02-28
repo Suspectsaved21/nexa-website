@@ -23,7 +23,6 @@ const CheckoutPage = () => {
   const { t } = useLanguage();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
-  const [clientSecret, setClientSecret] = useState("");
   const { cartItems, updateQuantity, removeFromCart } = useCart();
   const [itemsWithDetails, setItemsWithDetails] = useState<CartItemWithDetails[]>([]);
   const [user, setUser] = useState<any>(null);
@@ -134,32 +133,6 @@ const CheckoutPage = () => {
     setIsLoading(false);
   }, [cartItems]);
 
-  useEffect(() => {
-    const createPaymentIntent = async () => {
-      if (!user || itemsWithDetails.length === 0) return;
-
-      try {
-        const response = await supabase.functions.invoke('create-payment-intent', {
-          body: { 
-            items: itemsWithDetails,
-            userId: user.id
-          }
-        });
-
-        if (response.error) {
-          throw new Error(response.error.message);
-        }
-
-        setClientSecret(response.data.clientSecret);
-      } catch (error) {
-        console.error('Error creating payment intent:', error);
-        toast.error('Failed to initialize payment. Please try again.');
-      }
-    };
-
-    createPaymentIntent();
-  }, [user, itemsWithDetails]);
-
   if (isLoading) {
     return (
       <div className="container mx-auto px-4 py-8 mt-16 flex justify-center">
@@ -205,7 +178,6 @@ const CheckoutPage = () => {
           
           <CartSummary 
             items={itemsWithDetails}
-            clientSecret={clientSecret}
           />
         </div>
       )}
