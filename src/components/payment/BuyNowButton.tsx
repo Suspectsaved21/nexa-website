@@ -3,6 +3,8 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { ShoppingBag } from 'lucide-react';
+import { useCart } from '@/hooks/useCart';
+import { toast } from 'sonner';
 
 interface BuyNowButtonProps {
   productId: number;
@@ -14,6 +16,7 @@ const premiumProductIds = [1, 3, 101, 103, 106, 107]; // Example IDs for premium
 
 export const BuyNowButton: React.FC<BuyNowButtonProps> = ({ productId, className }) => {
   const navigate = useNavigate();
+  const { addToCart } = useCart();
   
   // Only show the button for premium products
   if (!premiumProductIds.includes(productId)) {
@@ -21,7 +24,12 @@ export const BuyNowButton: React.FC<BuyNowButtonProps> = ({ productId, className
   }
   
   const handleClick = () => {
-    navigate(`/payment/${productId}`);
+    // Add the product to cart
+    addToCart(productId);
+    // Show a success message
+    toast.success('Item added to cart');
+    // Navigate to the cart page
+    navigate('/cart');
   };
   
   return (
