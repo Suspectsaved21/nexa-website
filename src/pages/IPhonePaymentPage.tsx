@@ -71,59 +71,85 @@ const IPhonePaymentPage: React.FC = () => {
 
   return (
     <div className="container mx-auto py-12 px-4">
-      <div className="max-w-md mx-auto">
-        <Card>
-          <CardHeader>
-            <CardTitle>iPhone 14 - One Time Payment</CardTitle>
-            <CardDescription>Complete your purchase</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="name">Full Name</Label>
-                <Input 
-                  id="name" 
-                  placeholder="Enter your full name" 
-                  value={name} 
-                  onChange={(e) => setName(e.target.value)} 
-                  required 
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input 
-                  id="email" 
-                  type="email" 
-                  placeholder="Enter your email" 
-                  value={email} 
-                  onChange={(e) => setEmail(e.target.value)} 
-                  required 
-                />
-              </div>
-              
-              <div className="pt-2">
-                <div className="flex justify-between mb-2">
-                  <span className="font-medium">Product</span>
-                  <span className="font-medium">iPhone 14</span>
+      <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-8">
+        <div className="p-4">
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h2 className="text-2xl font-bold mb-4">iPhone 14</h2>
+            <div className="mb-6 rounded-lg overflow-hidden">
+              <img 
+                src="/lovable-uploads/c13e1fe6-bb38-4421-b142-81eeab58cca5.png" 
+                alt="iPhone 14" 
+                className="w-full h-auto object-contain"
+              />
+            </div>
+            <div className="space-y-2">
+              <p className="text-lg font-semibold">Key Features:</p>
+              <ul className="list-disc pl-5 space-y-1 text-gray-700">
+                <li>Powerful A15 Bionic chip</li>
+                <li>Dual-camera system with Night mode</li>
+                <li>Super Retina XDR display</li>
+                <li>All-day battery life</li>
+                <li>5G cellular connectivity</li>
+                <li>iOS 16 with advanced features</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        
+        <div className="p-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>iPhone 14 - One Time Payment</CardTitle>
+              <CardDescription>Complete your purchase</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="name">Full Name</Label>
+                  <Input 
+                    id="name" 
+                    placeholder="Enter your full name" 
+                    value={name} 
+                    onChange={(e) => setName(e.target.value)} 
+                    required 
+                  />
                 </div>
-                <div className="flex justify-between font-medium">
-                  <span>Price</span>
-                  <span>$999.00</span>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email</Label>
+                  <Input 
+                    id="email" 
+                    type="email" 
+                    placeholder="Enter your email" 
+                    value={email} 
+                    onChange={(e) => setEmail(e.target.value)} 
+                    required 
+                  />
                 </div>
-              </div>
-            </form>
-          </CardContent>
-          <CardFooter>
-            <Button 
-              onClick={handleSubmit}
-              className="w-full bg-[#721244] hover:bg-[#5d0f37]" 
-              disabled={isLoading}
-            >
-              {isLoading ? 'Processing...' : 'Pay $999.00'}
-            </Button>
-          </CardFooter>
-        </Card>
+                
+                <div className="pt-2">
+                  <div className="flex justify-between mb-2">
+                    <span className="font-medium">Product</span>
+                    <span className="font-medium">iPhone 14</span>
+                  </div>
+                  <div className="flex justify-between font-medium">
+                    <span>Price</span>
+                    <span>$999.00</span>
+                  </div>
+                </div>
+              </form>
+            </CardContent>
+            <CardFooter>
+              <Button 
+                onClick={handleSubmit}
+                className="w-full bg-[#721244] hover:bg-[#5d0f37]" 
+                disabled={isLoading}
+              >
+                {isLoading ? 'Processing...' : 'Pay $999.00'}
+              </Button>
+            </CardFooter>
+          </Card>
+        </div>
       </div>
     </div>
   );

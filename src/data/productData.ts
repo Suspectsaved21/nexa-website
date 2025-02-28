@@ -4,7 +4,7 @@ export const specialProducts = [
     id: 101,
     name: "iPhone 14",
     price: 500.00,
-    image: "/lovable-uploads/417323af-6908-4ad4-a593-0471728e8f22.png"
+    image: "/lovable-uploads/c13e1fe6-bb38-4421-b142-81eeab58cca5.png"
   },
   {
     id: 102,
