@@ -32,3 +32,10 @@ export interface PaymentRecord {
   stripe_payment_id: string;
   created_at: string;
 }
+
+export interface BuyNowButtonProps {
+  productName: string;
+  productImage: string;
+  price: number;
+  priceId?: string;
+}

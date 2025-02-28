@@ -4,14 +4,9 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { BuyNowButtonProps } from "@/types/checkout";
 
-interface BuyNowButtonProps {
-  productName: string;
-  productImage: string;
-  price: number;
-}
-
-export const BuyNowButton = ({ productName, productImage, price }: BuyNowButtonProps) => {
+export const BuyNowButton = ({ productName, productImage, price, priceId }: BuyNowButtonProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -24,6 +19,7 @@ export const BuyNowButton = ({ productName, productImage, price }: BuyNowButtonP
           productName,
           productImage,
           price,
+          priceId,
           successUrl: `${window.location.origin}/success`,
           cancelUrl: `${window.location.origin}/cancel`,
         },

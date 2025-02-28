@@ -32,6 +32,7 @@ export const CartSummary = ({ items, clientSecret }: CartSummaryProps) => {
             productName={iphone14Item.name}
             productImage={iphone14Item.image}
             price={iphone14Item.price}
+            priceId="prod_RrIPJKAbKeC0tv"
           />
         </div>
       )}
