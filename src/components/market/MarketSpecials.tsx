@@ -4,6 +4,7 @@ import { Plus, Minus } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { CartItem } from "@/types/checkout";
 import { LazyImage } from "@/components/LazyImage";
+import { BuyNowButton } from "@/components/payment/BuyNowButton";
 
 interface Special {
   id: number;
@@ -47,25 +48,30 @@ export const MarketSpecials = ({ specials, cartItems, incrementItem, decrementIt
               </div>
               <h3 className="text-base md:text-lg font-semibold mb-2 line-clamp-2 h-12">{special.name}</h3>
               <p className="text-lg md:text-xl font-bold text-[#721244] mb-4">€{special.price.toFixed(2)}</p>
-              <div className="flex items-center justify-between gap-2">
-                <button 
-                  onClick={() => decrementItem(special.id)}
-                  className="p-2 bg-[#530a46] text-white rounded hover:bg-[#3d0733] transition-colors"
-                >
-                  <Minus className="h-4 w-4" />
-                </button>
-                <Button 
-                  onClick={() => incrementItem(special.id)}
-                  className="flex-1 bg-[#530a46] hover:bg-[#3d0733] text-white transition-colors"
-                >
-                  {t("addToCart")} ({getItemQuantity(special.id)})
-                </Button>
-                <button 
-                  onClick={() => incrementItem(special.id)}
-                  className="p-2 bg-[#530a46] text-white rounded hover:bg-[#3d0733] transition-colors"
-                >
-                  <Plus className="h-4 w-4" />
-                </button>
+              
+              <div className="flex flex-col gap-3">
+                <div className="flex items-center justify-between gap-2">
+                  <button 
+                    onClick={() => decrementItem(special.id)}
+                    className="p-2 bg-[#530a46] text-white rounded hover:bg-[#3d0733] transition-colors"
+                  >
+                    <Minus className="h-4 w-4" />
+                  </button>
+                  <Button 
+                    onClick={() => incrementItem(special.id)}
+                    className="flex-1 bg-[#530a46] hover:bg-[#3d0733] text-white transition-colors"
+                  >
+                    {t("addToCart")} ({getItemQuantity(special.id)})
+                  </Button>
+                  <button 
+                    onClick={() => incrementItem(special.id)}
+                    className="p-2 bg-[#530a46] text-white rounded hover:bg-[#3d0733] transition-colors"
+                  >
+                    <Plus className="h-4 w-4" />
+                  </button>
+                </div>
+                
+                <BuyNowButton productId={special.id} className="w-full" />
               </div>
             </div>
           ))}

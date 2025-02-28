@@ -17,6 +17,7 @@ export const market = {
     search: "Search",
     searchPlaceholder: "Search products...",
     addToCart: "Add to Cart",
+    buyNow: "Buy Now",
     footerText: "© 2025 Nexa. All rights reserved.",
   },
   fr: {
@@ -36,6 +37,7 @@ export const market = {
     search: "Rechercher",
     searchPlaceholder: "Rechercher des produits...",
     addToCart: "Ajouter au panier",
+    buyNow: "Acheter maintenant",
     footerText: "© 2025 Nexa. Tous droits réservés.",
   },
 };
