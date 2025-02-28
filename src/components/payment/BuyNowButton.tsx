@@ -15,12 +15,7 @@ export const BuyNowButton: React.FC<BuyNowButtonProps> = ({ productId, className
   const { t } = useLanguage();
   
   const handleClick = () => {
-    // Special handling for iPhone product (ID: 101)
-    if (productId === 101) {
-      navigate('/iphone-payment');
-    } else {
-      navigate(`/payment/${productId}`);
-    }
+    navigate(`/payment/${productId}`);
   };
   
   return (

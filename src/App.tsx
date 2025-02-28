@@ -18,11 +18,6 @@ const PaymentCanceledPage = lazy(() => import("@/pages/PaymentCanceledPage"));
 const SearchResultsPage = lazy(() => import("@/pages/SearchResultsPage"));
 const Founder = lazy(() => import("@/pages/Founder"));
 
-// iPhone payment pages
-const IPhonePaymentPage = lazy(() => import("@/pages/IPhonePaymentPage"));
-const IPhonePaymentSuccessPage = lazy(() => import("@/pages/IPhonePaymentSuccessPage"));
-const IPhonePaymentCanceledPage = lazy(() => import("@/pages/IPhonePaymentCanceledPage"));
-
 function App() {
   return (
     <div className="flex flex-col min-h-screen bg-zinc-50">
@@ -39,11 +34,6 @@ function App() {
             <Route path="/payment/canceled" element={<PaymentCanceledPage />} />
             <Route path="/search" element={<SearchResultsPage />} />
             <Route path="/founder" element={<Founder />} />
-            
-            {/* iPhone payment routes */}
-            <Route path="/iphone-payment" element={<IPhonePaymentPage />} />
-            <Route path="/iphone-payment/success" element={<IPhonePaymentSuccessPage />} />
-            <Route path="/iphone-payment/cancel" element={<IPhonePaymentCanceledPage />} />
           </Routes>
         </Suspense>
       </main>
