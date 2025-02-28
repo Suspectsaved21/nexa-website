@@ -1,14 +1,12 @@
-
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import { CheckoutForm } from "./CheckoutForm";
 import { CartSummaryProps } from "@/types/checkout";
-import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
 
-export const CartSummary = ({ items }: CartSummaryProps) => {
+const stripePromise = loadStripe('pk_test_51OdAmJDm3zF6RmDdXlp6zMoSlOCHLFIDEaRgVu6eE3LNzpeGuYwYnxzaU8TjmcKLMEOBvrZUyH8lAHJvZcadgpkk00TRDtMw3g');
+
+export const CartSummary = ({ items, clientSecret }: CartSummaryProps) => {
   const total = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-
-  const handleCheckout = () => {
-    toast.success("Your order has been placed!");
-  };
 
   return (
     <div className="mt-6 p-4 bg-white rounded-lg shadow">
@@ -19,12 +17,11 @@ export const CartSummary = ({ items }: CartSummaryProps) => {
         </span>
       </div>
 
-      <Button 
-        onClick={handleCheckout}
-        className="w-full mt-4 bg-[#721244] hover:bg-[#5d0f37]"
-      >
-        Complete Order
-      </Button>
+      {clientSecret && (
+        <Elements stripe={stripePromise} options={{ clientSecret }}>
+          <CheckoutForm clientSecret={clientSecret} />
+        </Elements>
+      )}
     </div>
   );
 };

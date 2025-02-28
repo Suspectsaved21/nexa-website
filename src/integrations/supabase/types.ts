@@ -111,7 +111,7 @@ export type Database = {
           session_id?: string | null
           status?: string
           updated_at?: string
-          user_id?: string
+          user_id: string
         }
         Update: {
           amount?: number
@@ -123,42 +123,6 @@ export type Database = {
           status?: string
           updated_at?: string
           user_id?: string
-        }
-        Relationships: []
-      }
-      payments: {
-        Row: {
-          amount: number
-          created_at: string
-          email: string
-          id: string
-          name: string
-          payment_intent_id: string | null
-          payment_status: string | null
-          product_id: number | null
-          updated_at: string
-        }
-        Insert: {
-          amount: number
-          created_at?: string
-          email: string
-          id?: string
-          name: string
-          payment_intent_id?: string | null
-          payment_status?: string | null
-          product_id?: number | null
-          updated_at?: string
-        }
-        Update: {
-          amount?: number
-          created_at?: string
-          email?: string
-          id?: string
-          name?: string
-          payment_intent_id?: string | null
-          payment_status?: string | null
-          product_id?: number | null
-          updated_at?: string
         }
         Relationships: []
       }

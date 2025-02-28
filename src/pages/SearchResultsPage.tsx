@@ -7,7 +7,6 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Plus, Minus } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { BuyNowButton } from "@/components/payment/BuyNowButton";
 
 const SearchResultsPage = () => {
   const location = useLocation();
@@ -151,30 +150,25 @@ const SearchResultsPage = () => {
                 </div>
                 <h3 className="text-lg font-semibold mb-2 line-clamp-2 h-12">{product.name}</h3>
                 <p className="text-lg font-bold text-[#721244] mb-4">€{product.price.toFixed(2)}</p>
-                
-                <div className="flex flex-col gap-3">
-                  <div className="flex items-center justify-between gap-2">
-                    <button 
-                      onClick={() => decrementItem(product.id)}
-                      className="p-2 bg-[#530a46] text-white rounded hover:bg-[#3d0733]"
-                    >
-                      <Minus className="h-4 w-4" />
-                    </button>
-                    <Button 
-                      onClick={() => incrementItem(product.id)}
-                      className="flex-1 bg-[#530a46] hover:bg-[#3d0733] text-white"
-                    >
-                      {t("addToCart")} ({getItemQuantity(product.id)})
-                    </Button>
-                    <button 
-                      onClick={() => incrementItem(product.id)}
-                      className="p-2 bg-[#530a46] text-white rounded hover:bg-[#3d0733]"
-                    >
-                      <Plus className="h-4 w-4" />
-                    </button>
-                  </div>
-                  
-                  <BuyNowButton productId={product.id} className="w-full" />
+                <div className="flex items-center justify-between gap-2">
+                  <button 
+                    onClick={() => decrementItem(product.id)}
+                    className="p-2 bg-[#530a46] text-white rounded hover:bg-[#3d0733]"
+                  >
+                    <Minus className="h-4 w-4" />
+                  </button>
+                  <Button 
+                    onClick={() => incrementItem(product.id)}
+                    className="flex-1 bg-[#530a46] hover:bg-[#3d0733] text-white"
+                  >
+                    {t("addToCart")} ({getItemQuantity(product.id)})
+                  </Button>
+                  <button 
+                    onClick={() => incrementItem(product.id)}
+                    className="p-2 bg-[#530a46] text-white rounded hover:bg-[#3d0733]"
+                  >
+                    <Plus className="h-4 w-4" />
+                  </button>
                 </div>
               </div>
             ))}
