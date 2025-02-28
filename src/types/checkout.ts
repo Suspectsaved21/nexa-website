@@ -20,3 +20,15 @@ export interface CartSummaryProps {
   items: CartItemWithDetails[];
   clientSecret: string;
 }
+
+export interface PaymentRecord {
+  id: string;
+  user_id: string;
+  product_name: string;
+  email: string;
+  amount: number;
+  currency: string;
+  payment_status: string;
+  stripe_payment_id: string;
+  created_at: string;
+}
