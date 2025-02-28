@@ -21,9 +21,9 @@ serve(async (req) => {
   }
 
   try {
-    const { productName, productImage, price, priceId, successUrl, cancelUrl } = await req.json();
+    const { productName, productImage, price, userId, priceId, successUrl, cancelUrl } = await req.json();
 
-    console.log("Creating checkout session for:", { productName, price, priceId });
+    console.log("Creating checkout session for:", { productName, price, priceId, userId });
 
     // Validate required fields
     if (!productName || !price || !successUrl || !cancelUrl) {
@@ -50,6 +50,10 @@ serve(async (req) => {
       mode: "payment",
       success_url: successUrl,
       cancel_url: cancelUrl,
+      client_reference_id: userId, // Add user ID as reference
+      metadata: {
+        productName: productName, // Add product name to metadata
+      },
     });
 
     console.log("Checkout session created:", session.id);

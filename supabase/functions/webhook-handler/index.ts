@@ -12,24 +12,39 @@ const supabaseUrl = Deno.env.get("SUPABASE_URL") || "";
 const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "";
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+// CORS headers for browser requests
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+};
+
 serve(async (req) => {
+  // Handle CORS preflight requests
+  if (req.method === "OPTIONS") {
+    return new Response(null, { headers: corsHeaders });
+  }
+
   const signature = req.headers.get("stripe-signature");
 
   if (!signature) {
     console.error("Missing Stripe signature");
     return new Response(JSON.stringify({ error: "Missing stripe signature" }), {
       status: 400,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
 
   try {
     const body = await req.text();
     
-    // Store the raw webhook event in the database
+    // Use the provided webhook secret to verify the signature
+    const webhookSecret = Deno.env.get("STRIPE_WEBHOOK_SECRET") || "whsec_Z12jqbl97uyHfkM1E2lmIsKf65KN9BEb";
+    
+    // Verify and construct the webhook event
     const webhookEvent = stripe.webhooks.constructEvent(
       body,
       signature,
-      Deno.env.get("STRIPE_WEBHOOK_SECRET") || ""
+      webhookSecret
     );
 
     console.log(`Received webhook event: ${webhookEvent.type}`);
@@ -52,12 +67,12 @@ serve(async (req) => {
     if (webhookEvent.type === "checkout.session.completed") {
       const session = webhookEvent.data.object;
       
-      // Store payment record for the iPhone purchase
+      // Store payment record for the purchase
       const { error: paymentError } = await supabase
         .from("iphone_payments")
         .insert({
           amount: session.amount_total ? session.amount_total / 100 : 0,
-          product_name: "iPhone 14", // Default to iPhone 14 as that's our specific product
+          product_name: session.metadata?.productName || "iPhone 14", // Use metadata or default to iPhone 14
           email: session.customer_details?.email || "",
           payment_status: "paid",
           stripe_payment_id: session.payment_intent,
@@ -68,11 +83,13 @@ serve(async (req) => {
         console.error("Error storing payment record:", paymentError);
         throw new Error(`Error storing payment record: ${paymentError.message}`);
       }
+      
+      console.log("Payment record created successfully");
     }
 
     return new Response(JSON.stringify({ received: true }), {
       status: 200,
-      headers: { "Content-Type": "application/json" },
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (err) {
     console.error(`Webhook error: ${err.message}`);
@@ -80,7 +97,7 @@ serve(async (req) => {
       JSON.stringify({ error: `Webhook error: ${err.message}` }),
       {
         status: 400,
-        headers: { "Content-Type": "application/json" },
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
       }
     );
   }

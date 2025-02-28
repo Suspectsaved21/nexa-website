@@ -14,13 +14,18 @@ export const BuyNowButton = ({ productName, productImage, price, priceId }: BuyN
     try {
       setIsLoading(true);
       
-      console.log("Sending checkout request with:", { productName, productImage, price, priceId });
+      // Get current user if logged in
+      const { data: { user } } = await supabase.auth.getUser();
+      const userId = user?.id;
+      
+      console.log("Sending checkout request with:", { productName, productImage, price, priceId, userId });
       
       const { data, error } = await supabase.functions.invoke("create-checkout-session", {
         body: {
           productName,
           productImage,
           price,
+          userId,
           successUrl: `${window.location.origin}/success`,
           cancelUrl: `${window.location.origin}/cancel`,
         },
