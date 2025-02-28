@@ -1,45 +1,46 @@
 
-import React, { lazy, Suspense } from "react";
-import { Route, Routes } from "react-router-dom";
-import { Toaster } from "sonner";
-import { LoadingSpinner } from "@/components/LoadingSpinner";
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
-import "./App.css";
+import React, { useEffect } from 'react';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import LandingPage from './pages/LandingPage';
+import AuthPage from './pages/AuthPage';
+import CartPage from './pages/CartPage';
+import CheckoutPage from './pages/CheckoutPage';
+import Founder from './pages/Founder';
+import { useAuthStatus } from './hooks/useAuthStatus';
+import SearchResultsPage from './pages/SearchResultsPage';
+import Index from './pages/Index';
+import PaymentPage from './pages/PaymentPage';
+import PaymentSuccessPage from './pages/PaymentSuccessPage';
+import PaymentCanceledPage from './pages/PaymentCanceledPage';
 
-// Lazy loaded components
-const LandingPage = lazy(() => import("@/pages/LandingPage"));
-const AuthPage = lazy(() => import("@/pages/AuthPage"));
-const CartPage = lazy(() => import("@/pages/CartPage"));
-const CheckoutPage = lazy(() => import("@/pages/CheckoutPage"));
-const PaymentPage = lazy(() => import("@/pages/PaymentPage"));
-const PaymentSuccessPage = lazy(() => import("@/pages/PaymentSuccessPage"));
-const PaymentCanceledPage = lazy(() => import("@/pages/PaymentCanceledPage"));
-const SearchResultsPage = lazy(() => import("@/pages/SearchResultsPage"));
-const Founder = lazy(() => import("@/pages/Founder"));
+// Scroll to top on route change
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+};
 
 function App() {
   return (
-    <div className="flex flex-col min-h-screen bg-zinc-50">
-      <Navbar />
-      <main className="flex-grow">
-        <Suspense fallback={<LoadingSpinner />}>
-          <Routes>
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/auth" element={<AuthPage />} />
-            <Route path="/cart" element={<CartPage />} />
-            <Route path="/checkout" element={<CheckoutPage />} />
-            <Route path="/payment/:productId" element={<PaymentPage />} />
-            <Route path="/payment/success" element={<PaymentSuccessPage />} />
-            <Route path="/payment/canceled" element={<PaymentCanceledPage />} />
-            <Route path="/search" element={<SearchResultsPage />} />
-            <Route path="/founder" element={<Founder />} />
-          </Routes>
-        </Suspense>
-      </main>
-      <Footer />
-      <Toaster position="top-right" />
-    </div>
+    <BrowserRouter>
+      <ScrollToTop />
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/auth" element={<AuthPage />} />
+        <Route path="/cart" element={<CartPage />} />
+        <Route path="/checkout" element={<CheckoutPage />} />
+        <Route path="/founder" element={<Founder />} />
+        <Route path="/search" element={<SearchResultsPage />} />
+        <Route path="/market" element={<Index />} />
+        <Route path="/payment/:productId" element={<PaymentPage />} />
+        <Route path="/payment/success" element={<PaymentSuccessPage />} />
+        <Route path="/payment/canceled" element={<PaymentCanceledPage />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

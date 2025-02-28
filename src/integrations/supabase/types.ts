@@ -36,42 +36,6 @@ export type Database = {
         }
         Relationships: []
       }
-      iphone_payments: {
-        Row: {
-          amount: number
-          created_at: string
-          currency: string
-          email: string
-          id: string
-          payment_status: string
-          product_name: string
-          stripe_payment_id: string | null
-          user_id: string | null
-        }
-        Insert: {
-          amount: number
-          created_at?: string
-          currency?: string
-          email: string
-          id?: string
-          payment_status?: string
-          product_name: string
-          stripe_payment_id?: string | null
-          user_id?: string | null
-        }
-        Update: {
-          amount?: number
-          created_at?: string
-          currency?: string
-          email?: string
-          id?: string
-          payment_status?: string
-          product_name?: string
-          stripe_payment_id?: string | null
-          user_id?: string | null
-        }
-        Relationships: []
-      }
       messages: {
         Row: {
           created_at: string
