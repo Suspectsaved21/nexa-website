@@ -21,7 +21,6 @@ export const BuyNowButton = ({ productName, productImage, price, priceId }: BuyN
           productName,
           productImage,
           price,
-          priceId,
           successUrl: `${window.location.origin}/success`,
           cancelUrl: `${window.location.origin}/cancel`,
         },

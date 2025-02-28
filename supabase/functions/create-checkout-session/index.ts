@@ -1,3 +1,4 @@
+
 import { serve } from "https://deno.land/std@0.177.1/http/server.ts";
 import Stripe from "https://esm.sh/stripe@12.1.1?target=deno";
 
@@ -29,46 +30,27 @@ serve(async (req) => {
       throw new Error("Missing required fields");
     }
 
-    let session;
-
-    if (priceId) {
-      // If a price ID is provided, use it (for products defined in Stripe dashboard)
-      console.log("Using Stripe price ID:", priceId);
-      session = await stripe.checkout.sessions.create({
-        payment_method_types: ["card"],
-        line_items: [
-          {
-            price: priceId,
-            quantity: 1,
-          },
-        ],
-        mode: "payment",
-        success_url: successUrl,
-        cancel_url: cancelUrl,
-      });
-    } else {
-      // Otherwise create a one-time payment with the provided details
-      console.log("Creating one-time payment with price:", price);
-      session = await stripe.checkout.sessions.create({
-        payment_method_types: ["card"],
-        line_items: [
-          {
-            price_data: {
-              currency: "usd",
-              product_data: {
-                name: productName,
-                images: productImage ? [productImage] : [],
-              },
-              unit_amount: Math.round(price * 100), // Convert to cents
+    // Create a one-time payment with the provided details
+    console.log("Creating one-time payment with price:", price);
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      line_items: [
+        {
+          price_data: {
+            currency: "usd",
+            product_data: {
+              name: productName,
+              images: productImage ? [productImage] : [],
             },
-            quantity: 1,
+            unit_amount: Math.round(price * 100), // Convert to cents
           },
-        ],
-        mode: "payment",
-        success_url: successUrl,
-        cancel_url: cancelUrl,
-      });
-    }
+          quantity: 1,
+        },
+      ],
+      mode: "payment",
+      success_url: successUrl,
+      cancel_url: cancelUrl,
+    });
 
     console.log("Checkout session created:", session.id);
 
