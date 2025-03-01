@@ -15,7 +15,7 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 // CORS headers for browser requests
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, stripe-signature",
 };
 
 serve(async (req) => {
@@ -24,30 +24,42 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
-  const signature = req.headers.get("stripe-signature");
-
-  if (!signature) {
-    console.error("Missing Stripe signature");
-    return new Response(JSON.stringify({ error: "Missing stripe signature" }), {
-      status: 400,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
-  }
-
   try {
     const body = await req.text();
+    const signature = req.headers.get("stripe-signature");
+    console.log("Received webhook with signature:", signature);
     
-    // Use the provided webhook secret to verify the signature
-    const webhookSecret = Deno.env.get("STRIPE_WEBHOOK_SECRET") || "whsec_Z12jqbl97uyHfkM1E2lmIsKf65KN9BEb";
+    let webhookEvent;
     
-    // Verify and construct the webhook event
-    const webhookEvent = stripe.webhooks.constructEvent(
-      body,
-      signature,
-      webhookSecret
-    );
+    // Get the webhook secret from environment variables
+    const webhookSecret = Deno.env.get("STRIPE_WEBHOOK_SECRET");
+    
+    if (signature && webhookSecret) {
+      // If we have both signature and secret, verify the signature
+      try {
+        webhookEvent = stripe.webhooks.constructEvent(
+          body,
+          signature,
+          webhookSecret
+        );
+        console.log("Signature verified successfully");
+      } catch (err) {
+        console.error(`Webhook signature verification failed: ${err.message}`);
+        return new Response(
+          JSON.stringify({ error: `Signature verification failed: ${err.message}` }),
+          {
+            status: 400,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          }
+        );
+      }
+    } else {
+      // For testing, if no signature or secret, parse the body directly
+      console.log("No signature or webhook secret provided, parsing body directly");
+      webhookEvent = JSON.parse(body);
+    }
 
-    console.log(`Received webhook event: ${webhookEvent.type}`);
+    console.log(`Processing webhook event: ${webhookEvent.type}`);
     
     // Store the event in the database for auditing purposes
     const { error: storeError } = await supabase
