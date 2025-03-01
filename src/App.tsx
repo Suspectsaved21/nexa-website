@@ -71,6 +71,7 @@ const App = () => (
               />
               <Route path="/auth" element={<AuthPage />} />
               <Route path="/search" element={<SearchResultsPage />} />
+              {/* Catch-all route to handle 404 errors */}
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </Router>

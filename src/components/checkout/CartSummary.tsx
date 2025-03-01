@@ -1,15 +1,20 @@
 
 import { useState } from "react";
-import { CartSummaryProps } from "@/types/checkout";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { CartSummaryProps, CheckoutResponse } from "@/types/checkout";
 import { supabase } from "@/integrations/supabase/client";
-import { LoadingSpinner } from "@/components/LoadingSpinner";
 
 export const CartSummary = ({ items }: CartSummaryProps) => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [checkoutError, setCheckoutError] = useState<string | null>(null);
-  const total = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const navigate = useNavigate();
+
+  const calculateTotal = () => {
+    return items.reduce((total, item) => {
+      return total + (item.price * item.quantity);
+    }, 0);
+  };
 
   const handleCheckout = async () => {
     if (items.length === 0) {
@@ -17,67 +22,76 @@ export const CartSummary = ({ items }: CartSummaryProps) => {
       return;
     }
 
-    setIsLoading(true);
-    setCheckoutError(null);
-    
-    try {
-      // Generate appropriate return URLs
-      const successUrl = `${window.location.origin}/checkout/success`;
-      const cancelUrl = `${window.location.origin}/checkout/cancel`;
+    setIsProcessing(true);
 
-      // We'll use the mode where we provide the priceId directly
-      const { data, error } = await supabase.functions.invoke('create-checkout-session', {
-        body: { 
-          priceId: 'prod_Rre9tctWLjCkLY', // Using the specific price ID
-          returnUrl: successUrl,
-          cancelUrl: cancelUrl
+    try {
+      // Get the current origin for absolute URLs
+      const origin = window.location.origin;
+      
+      // Create absolute URLs for success and cancel paths
+      const successUrl = `${origin}/checkout/success`;
+      const cancelUrl = `${origin}/checkout/cancel`;
+      
+      console.log("Checkout URLs:", { successUrl, cancelUrl });
+
+      // Call the Supabase Edge Function to create a checkout session
+      const { data, error } = await supabase.functions.invoke<CheckoutResponse>(
+        'create-checkout-session', 
+        { 
+          body: { 
+            items, 
+            priceId: 'prod_Rre9tctWLjCkLY',  // Use the product ID provided
+            returnUrl: successUrl,
+            cancelUrl: cancelUrl
+          } 
         }
-      });
-      
-      if (error) {
-        throw error;
+      );
+
+      if (error || !data) {
+        throw new Error(error?.message || 'Failed to create checkout session');
       }
-      
-      if (data?.url) {
-        // Redirect to Stripe checkout
+
+      console.log("Checkout response:", data);
+
+      // Redirect to the Stripe Checkout URL
+      if (data.url) {
         window.location.href = data.url;
-      } else if (data?.error) {
-        setCheckoutError(data.error);
-        toast.error(data.error);
       } else {
         throw new Error('No checkout URL returned');
       }
-    } catch (error) {
-      console.error('Checkout error:', error);
-      const errorMessage = error.message || 'Unable to proceed to checkout. Please try again later.';
-      setCheckoutError(errorMessage);
-      toast.error(errorMessage);
-    } finally {
-      setIsLoading(false);
+    } catch (err) {
+      console.error('Checkout error:', err);
+      toast.error(`Checkout failed: ${err instanceof Error ? err.message : 'Unknown error'}`);
+      setIsProcessing(false);
     }
   };
 
   return (
-    <div className="mt-6 p-4 bg-white rounded-lg shadow">
-      <div className="flex justify-between items-center mb-4">
-        <span className="text-xl font-semibold">Total:</span>
-        <span className="text-xl font-bold">
-          ${total.toFixed(2)}
-        </span>
+    <div className="bg-white p-6 rounded-lg shadow-md">
+      <h2 className="text-xl font-bold mb-4">Order Summary</h2>
+      
+      <div className="space-y-2 mb-4">
+        {items.map((item) => (
+          <div key={item.id} className="flex justify-between">
+            <span>{item.name} (x{item.quantity})</span>
+            <span>${(item.price * item.quantity).toFixed(2)}</span>
+          </div>
+        ))}
       </div>
-
-      {checkoutError && (
-        <div className="my-4 p-3 bg-red-50 text-red-700 rounded-md text-sm">
-          Error: {checkoutError}
+      
+      <div className="border-t pt-4 mt-4">
+        <div className="flex justify-between font-bold text-lg">
+          <span>Total</span>
+          <span>${calculateTotal().toFixed(2)}</span>
         </div>
-      )}
-
+      </div>
+      
       <Button 
         onClick={handleCheckout}
-        className="w-full mt-4 bg-[#721244] hover:bg-[#5d0f37]"
-        disabled={isLoading}
+        disabled={isProcessing || items.length === 0}
+        className="w-full mt-6 bg-[#721244] hover:bg-[#5d0f37]"
       >
-        {isLoading ? <LoadingSpinner /> : 'Proceed to Checkout'}
+        {isProcessing ? "Processing..." : "Proceed to Checkout"}
       </Button>
     </div>
   );

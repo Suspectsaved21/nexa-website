@@ -40,6 +40,16 @@ serve(async (req) => {
       );
     }
 
+    // Extract origin from request for absolute URLs
+    const url = new URL(req.url);
+    const origin = url.origin;
+    
+    // Make sure returnUrl and cancelUrl are absolute
+    const absoluteReturnUrl = returnUrl.startsWith('http') ? returnUrl : `${origin}${returnUrl}`;
+    const absoluteCancelUrl = cancelUrl ? (cancelUrl.startsWith('http') ? cancelUrl : `${origin}${cancelUrl}`) : absoluteReturnUrl;
+
+    console.log("Using absolute URLs:", { absoluteReturnUrl, absoluteCancelUrl });
+
     let sessionParams;
 
     // Try to use priceId first if provided
@@ -58,8 +68,8 @@ serve(async (req) => {
             // Use the first price for this product
             sessionParams = {
               mode: 'payment',
-              success_url: returnUrl,
-              cancel_url: cancelUrl || returnUrl,
+              success_url: absoluteReturnUrl,
+              cancel_url: absoluteCancelUrl,
               line_items: [
                 {
                   price: prices.data[0].id,
@@ -74,8 +84,8 @@ serve(async (req) => {
           // If it's already a price ID (starts with 'price_')
           sessionParams = {
             mode: 'payment',
-            success_url: returnUrl,
-            cancel_url: cancelUrl || returnUrl,
+            success_url: absoluteReturnUrl,
+            cancel_url: absoluteCancelUrl,
             line_items: [
               {
                 price: priceId,
@@ -102,8 +112,8 @@ serve(async (req) => {
     if (!sessionParams && items && items.length > 0) {
       sessionParams = {
         mode: 'payment',
-        success_url: returnUrl,
-        cancel_url: cancelUrl || returnUrl,
+        success_url: absoluteReturnUrl,
+        cancel_url: absoluteCancelUrl,
         line_items: items.map(item => ({
           price_data: {
             currency: 'usd',
