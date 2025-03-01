@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -12,6 +13,8 @@ import LandingPage from "./pages/LandingPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import AuthPage from "./pages/AuthPage";
 import SearchResultsPage from "./pages/SearchResultsPage";
+import CheckoutSuccessPage from "./pages/CheckoutSuccessPage";
+import CheckoutCancelPage from "./pages/CheckoutCancelPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -47,6 +50,22 @@ const App = () => (
                 element={
                   <AuthGuard>
                     <CheckoutPage />
+                  </AuthGuard>
+                } 
+              />
+              <Route 
+                path="/checkout/success" 
+                element={
+                  <AuthGuard>
+                    <CheckoutSuccessPage />
+                  </AuthGuard>
+                } 
+              />
+              <Route 
+                path="/checkout/cancel" 
+                element={
+                  <AuthGuard>
+                    <CheckoutCancelPage />
                   </AuthGuard>
                 } 
               />

@@ -1,163 +1,143 @@
 
-import { serve } from "https://deno.land/std@0.177.1/http/server.ts";
+import { serve } from "https://deno.land/std@0.177.0/http/server.ts";
 import Stripe from "https://esm.sh/stripe@12.1.1?target=deno";
+import { corsHeaders } from "../_shared/cors.ts";
 
-// CORS headers
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
+const stripeSecretKey = Deno.env.get('STRIPE_SECRET_KEY');
+const stripe = new Stripe(stripeSecretKey!, {
+  apiVersion: '2023-10-16',
+  httpClient: Stripe.createFetchHttpClient(),
+});
+
+console.log("Hello from create-checkout-session function!");
 
 serve(async (req) => {
-  // Handle CORS preflight requests
+  // Handle CORS
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    if (!Deno.env.get('STRIPE_SECRET_KEY')) {
-      console.error('STRIPE_SECRET_KEY is not set in the environment variables');
+    // Make sure we have a Stripe key
+    if (!stripeSecretKey) {
+      console.error("Missing STRIPE_SECRET_KEY");
       return new Response(
-        JSON.stringify({ error: 'Stripe API key is not configured' }),
-        {
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          status: 500,
-        }
+        JSON.stringify({ error: 'Stripe secret key not configured' }),
+        { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 500 }
       );
     }
 
-    const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY')!, {
-      apiVersion: '2023-10-16',
-      httpClient: Stripe.createFetchHttpClient(),
-    });
+    const body = await req.json();
+    const { priceId, returnUrl, cancelUrl, items } = body;
 
-    const requestData = await req.json();
-    const { priceId, items, returnUrl } = requestData;
-    
+    console.log("Request body:", { priceId, returnUrl, items });
+
+    // Validate that we have the required data
     if (!returnUrl) {
-      throw new Error('Return URL is required');
+      return new Response(
+        JSON.stringify({ error: 'Return URL is required' }),
+        { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 400 }
+      );
     }
 
-    let session;
-    
+    let sessionParams;
+
+    // Try to use priceId first if provided
     if (priceId) {
-      // If a price ID is provided directly, use that
-      console.log(`Creating checkout session with product ID: ${priceId}`);
-      
       try {
-        // For product IDs (starting with prod_), we need to get the associated price first
+        // Check if it's a product ID (starts with 'prod_')
         if (priceId.startsWith('prod_')) {
-          // Get prices for this product
+          // If it's a product ID, fetch the prices for this product
           const prices = await stripe.prices.list({
             product: priceId,
             active: true,
-            limit: 1
+            limit: 1,
           });
-          
-          if (prices.data.length === 0) {
+
+          if (prices.data.length > 0) {
+            // Use the first price for this product
+            sessionParams = {
+              mode: 'payment',
+              success_url: returnUrl,
+              cancel_url: cancelUrl || returnUrl,
+              line_items: [
+                {
+                  price: prices.data[0].id,
+                  quantity: 1,
+                },
+              ],
+            };
+          } else {
             throw new Error(`No active prices found for product: ${priceId}`);
           }
-          
-          const actualPriceId = prices.data[0].id;
-          console.log(`Found price ID ${actualPriceId} for product ${priceId}`);
-          
-          session = await stripe.checkout.sessions.create({
-            payment_method_types: ['card'],
-            line_items: [
-              {
-                price: actualPriceId,
-                quantity: 1,
-              }
-            ],
-            mode: 'payment',
-            success_url: `${returnUrl}/success?session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `${returnUrl}`,
-          });
         } else {
-          // It's already a price ID
-          session = await stripe.checkout.sessions.create({
-            payment_method_types: ['card'],
+          // If it's already a price ID (starts with 'price_')
+          sessionParams = {
+            mode: 'payment',
+            success_url: returnUrl,
+            cancel_url: cancelUrl || returnUrl,
             line_items: [
               {
                 price: priceId,
                 quantity: 1,
-              }
-            ],
-            mode: 'payment',
-            success_url: `${returnUrl}/success?session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `${returnUrl}`,
-          });
-        }
-      } catch (e) {
-        console.error('Stripe Error:', e);
-        // Fall back to cart items if there's an issue with the price ID
-        if (items && Array.isArray(items) && items.length > 0) {
-          console.log('Falling back to cart items for checkout');
-          const lineItems = items.map(item => ({
-            price_data: {
-              currency: 'usd',
-              product_data: {
-                name: item.name,
-                images: item.image ? [item.image] : undefined,
               },
-              unit_amount: Math.round(item.price * 100), // Convert to cents
-            },
-            quantity: item.quantity,
-          }));
-
-          session = await stripe.checkout.sessions.create({
-            payment_method_types: ['card'],
-            line_items: lineItems,
-            mode: 'payment',
-            success_url: `${returnUrl}/success?session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `${returnUrl}`,
-          });
-        } else {
-          throw e; // Re-throw if we can't use cart items either
+            ],
+          };
+        }
+      } catch (error) {
+        console.error("Error with provided priceId:", error);
+        // Fall back to using items array if priceId fails
+        if (!items || items.length === 0) {
+          return new Response(
+            JSON.stringify({ 
+              error: `Price ID invalid and no items provided: ${error.message}` 
+            }),
+            { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 400 }
+          );
         }
       }
-    } else if (items && Array.isArray(items) && items.length > 0) {
-      // Create line items from cart items
-      console.log(`Creating checkout session with ${items.length} items`);
-      const lineItems = items.map(item => ({
-        price_data: {
-          currency: 'usd',
-          product_data: {
-            name: item.name,
-            images: item.image ? [item.image] : undefined,
-          },
-          unit_amount: Math.round(item.price * 100), // Convert to cents
-        },
-        quantity: item.quantity,
-      }));
-
-      session = await stripe.checkout.sessions.create({
-        payment_method_types: ['card'],
-        line_items: lineItems,
-        mode: 'payment',
-        success_url: `${returnUrl}/success?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${returnUrl}`,
-      });
-    } else {
-      throw new Error('Either priceId or items array is required');
     }
 
-    console.log('Checkout session created:', session.id);
+    // Fall back to using items if no valid priceId or if priceId processing failed
+    if (!sessionParams && items && items.length > 0) {
+      sessionParams = {
+        mode: 'payment',
+        success_url: returnUrl,
+        cancel_url: cancelUrl || returnUrl,
+        line_items: items.map(item => ({
+          price_data: {
+            currency: 'usd',
+            product_data: {
+              name: item.name,
+              images: item.image ? [item.image] : undefined,
+            },
+            unit_amount: Math.round(item.price * 100), // Convert to cents
+          },
+          quantity: item.quantity,
+        })),
+      };
+    }
+
+    // If we still don't have session params, we have a problem
+    if (!sessionParams) {
+      return new Response(
+        JSON.stringify({ error: 'Either a valid priceId or cart items are required' }),
+        { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 400 }
+      );
+    }
+
+    console.log("Creating checkout session with params:", sessionParams);
+    const session = await stripe.checkout.sessions.create(sessionParams);
+
     return new Response(
       JSON.stringify({ url: session.url }),
-      {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        status: 200,
-      }
+      { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 200 }
     );
   } catch (error) {
-    console.error('Error creating checkout session:', error);
+    console.error("Error creating checkout session:", error);
     return new Response(
-      JSON.stringify({ error: error.message }),
-      {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        status: 400,
-      }
+      JSON.stringify({ error: `Stripe Error: ${error.message}` }),
+      { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 400 }
     );
   }
 });

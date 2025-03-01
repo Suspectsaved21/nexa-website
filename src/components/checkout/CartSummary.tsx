@@ -21,11 +21,16 @@ export const CartSummary = ({ items }: CartSummaryProps) => {
     setCheckoutError(null);
     
     try {
+      // Generate appropriate return URLs
+      const successUrl = `${window.location.origin}/checkout/success`;
+      const cancelUrl = `${window.location.origin}/checkout/cancel`;
+
       // We'll use the mode where we provide the priceId directly
       const { data, error } = await supabase.functions.invoke('create-checkout-session', {
         body: { 
           priceId: 'prod_Rre9tctWLjCkLY', // Using the specific price ID
-          returnUrl: window.location.origin
+          returnUrl: successUrl,
+          cancelUrl: cancelUrl
         }
       });
       
