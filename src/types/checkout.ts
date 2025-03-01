@@ -27,6 +27,6 @@ export interface CheckoutResponse {
 
 export interface CheckoutRequestBody {
   items: CartItemWithDetails[];
-  priceId?: string;
+  priceId?: string; // Making priceId optional
   returnUrl: string;
 }
