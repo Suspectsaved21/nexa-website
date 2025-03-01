@@ -68,22 +68,9 @@ const App = () => (
                   </AuthGuard>
                 } 
               />
-              <Route 
-                path="/checkout/success" 
-                element={
-                  <AuthGuard>
-                    <CheckoutSuccessPage />
-                  </AuthGuard>
-                } 
-              />
-              <Route 
-                path="/checkout/cancel" 
-                element={
-                  <AuthGuard>
-                    <CheckoutCancelPage />
-                  </AuthGuard>
-                } 
-              />
+              {/* Remove AuthGuard for success and cancel pages to ensure they're always accessible */}
+              <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
+              <Route path="/checkout/cancel" element={<CheckoutCancelPage />} />
               <Route path="/auth" element={<AuthPage />} />
               <Route path="/search" element={<SearchResultsPage />} />
               {/* Catch-all route to handle 404 errors by redirecting to home */}

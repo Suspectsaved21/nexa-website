@@ -1,4 +1,3 @@
-
 import { serve } from "https://deno.land/std@0.177.0/http/server.ts";
 import Stripe from "https://esm.sh/stripe@12.1.1?target=deno";
 import { corsHeaders } from "../_shared/cors.ts";
@@ -40,13 +39,17 @@ serve(async (req) => {
       );
     }
 
-    // Extract origin from request for absolute URLs
+    // Extract origin from request for absolute URLs if needed
     const url = new URL(req.url);
     const origin = url.origin;
     
-    // Make sure returnUrl and cancelUrl are absolute
-    const absoluteReturnUrl = returnUrl.startsWith('http') ? returnUrl : `${origin}${returnUrl}`;
-    const absoluteCancelUrl = cancelUrl ? (cancelUrl.startsWith('http') ? cancelUrl : `${origin}${cancelUrl}`) : absoluteReturnUrl;
+    // Ensure returnUrl and cancelUrl are absolute
+    // If they already start with http/https, keep them as is
+    // Otherwise, prepend the origin to make them absolute
+    const absoluteReturnUrl = returnUrl.startsWith('http') ? returnUrl : `${origin}${returnUrl.startsWith('/') ? returnUrl : `/${returnUrl}`}`;
+    const absoluteCancelUrl = cancelUrl ? 
+      (cancelUrl.startsWith('http') ? cancelUrl : `${origin}${cancelUrl.startsWith('/') ? cancelUrl : `/${cancelUrl}`}`) : 
+      absoluteReturnUrl;
 
     console.log("Using absolute URLs:", { absoluteReturnUrl, absoluteCancelUrl });
 
