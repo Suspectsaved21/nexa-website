@@ -49,7 +49,7 @@ serve(async (req) => {
 
     console.log(`Received webhook event: ${webhookEvent.type}`);
     
-    // Store the event in the database
+    // Store the event in the database for auditing purposes
     const { error: storeError } = await supabase
       .from("stripe_webhook_events")
       .insert({
@@ -67,16 +67,19 @@ serve(async (req) => {
     if (webhookEvent.type === "checkout.session.completed") {
       const session = webhookEvent.data.object;
       
+      // Make sure this is for our specific product
+      const productId = session.metadata?.productId;
+      
       // Store payment record for the purchase
       const { error: paymentError } = await supabase
-        .from("iphone_payments")
+        .from("payments")
         .insert({
           amount: session.amount_total ? session.amount_total / 100 : 0,
-          product_name: session.metadata?.productName || "iPhone 14", // Use metadata or default to iPhone 14
+          name: session.metadata?.productName || "iPhone 14",
           email: session.customer_details?.email || "",
           payment_status: "paid",
-          stripe_payment_id: session.payment_intent,
-          user_id: session.client_reference_id,
+          payment_intent_id: session.payment_intent,
+          product_id: productId ? parseInt(productId) : 101, // Default to iPhone 14 product ID
         });
 
       if (paymentError) {

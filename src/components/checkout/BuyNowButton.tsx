@@ -25,7 +25,9 @@ export const BuyNowButton = ({ productName, productImage, price, priceId }: BuyN
           productName,
           productImage,
           price,
+          priceId: priceId || "prod_RrIPJKAbKeCOtv", // Default to iPhone 14 price ID
           userId,
+          productId: 101, // iPhone 14 product ID
           successUrl: `${window.location.origin}/success`,
           cancelUrl: `${window.location.origin}/cancel`,
         },
