@@ -10,9 +10,9 @@ import { AuthGuard } from "./components/AuthGuard";
 import Index from "./pages/Index";
 import Founder from "./pages/Founder";
 import LandingPage from "./pages/LandingPage";
-import CheckoutPage from "./pages/CheckoutPage";
 import AuthPage from "./pages/AuthPage";
 import SearchResultsPage from "./pages/SearchResultsPage";
+import CheckoutPage from "./pages/CheckoutPage";
 import CheckoutSuccessPage from "./pages/CheckoutSuccessPage";
 import CheckoutCancelPage from "./pages/CheckoutCancelPage";
 
@@ -24,17 +24,22 @@ const queryClient = new QueryClient({
       refetchOnWindowFocus: false,
       staleTime: 5 * 60 * 1000,
     },
+    mutations: {
+      onError: (error) => {
+        console.error("Mutation error:", error);
+      },
+    },
   },
 });
 
-// Add custom error handling
-queryClient.setDefaultOptions({
-  queries: {
-    onError: (error) => {
-      console.error("Query error:", error);
-    }
-  }
-});
+// Global error handler function for debugging
+const handleQueryError = (error: unknown) => {
+  console.error("Query error:", error);
+};
+
+// We'll use this in individual query components instead of global config
+// Example usage in components: 
+// useQuery({ queryKey: ['data'], queryFn: fetchData, onError: handleQueryError })
 
 const App = () => (
   <ErrorBoundary>
