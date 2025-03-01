@@ -18,9 +18,11 @@ export const CartSummary = ({ items }: CartSummaryProps) => {
 
     setIsLoading(true);
     try {
+      // Use the provided price ID for the checkout session
       const { data, error } = await supabase.functions.invoke('create-checkout-session', {
         body: { 
-          items, 
+          items,
+          priceId: 'prod_Rre9tctWLjCkLY', // Using the price ID provided by the user
           returnUrl: window.location.origin
         }
       });

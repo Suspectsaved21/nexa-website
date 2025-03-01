@@ -24,3 +24,9 @@ export interface CheckoutResponse {
   url: string;
   error?: string;
 }
+
+export interface CheckoutRequestBody {
+  items: CartItemWithDetails[];
+  priceId?: string;
+  returnUrl: string;
+}
