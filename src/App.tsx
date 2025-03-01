@@ -16,7 +16,7 @@ import SearchResultsPage from "./pages/SearchResultsPage";
 import CheckoutSuccessPage from "./pages/CheckoutSuccessPage";
 import CheckoutCancelPage from "./pages/CheckoutCancelPage";
 
-// Create a new query client with more generous defaults for this app
+// Create a query client with custom error handling
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -25,14 +25,15 @@ const queryClient = new QueryClient({
       staleTime: 5 * 60 * 1000,
     },
   },
-  logger: {
-    log: console.log,
-    warn: console.warn,
-    // Override the error method to add custom handling
-    error: (error) => {
+});
+
+// Add custom error handling
+queryClient.setDefaultOptions({
+  queries: {
+    onError: (error) => {
       console.error("Query error:", error);
-    },
-  },
+    }
+  }
 });
 
 const App = () => (
