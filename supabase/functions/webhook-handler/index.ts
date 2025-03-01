@@ -107,6 +107,21 @@ serve(async (req) => {
 
     console.log(`Processing webhook event: ${webhookEvent.type}`);
     
+    // Handle specific webhook events
+    switch(webhookEvent.type) {
+      case 'checkout.session.completed':
+        await handleCheckoutSessionCompleted(webhookEvent.data.object);
+        break;
+      case 'payment_intent.succeeded':
+        await handlePaymentIntentSucceeded(webhookEvent.data.object);
+        break;
+      case 'payment_intent.payment_failed':
+        await handlePaymentIntentFailed(webhookEvent.data.object);
+        break;
+      default:
+        console.log(`Unhandled event type: ${webhookEvent.type}`);
+    }
+    
     // Store the event in the database for auditing purposes
     const { error: storeError } = await supabase
       .from("stripe_webhook_events")
@@ -119,33 +134,6 @@ serve(async (req) => {
     if (storeError) {
       console.error("Error storing webhook event:", storeError);
       throw new Error(`Error storing webhook event: ${storeError.message}`);
-    }
-
-    // Process payment-related events
-    if (webhookEvent.type === "checkout.session.completed") {
-      const session = webhookEvent.data.object;
-      
-      // Make sure this is for our specific product
-      const productId = session.metadata?.productId;
-      
-      // Store payment record for the purchase
-      const { error: paymentError } = await supabase
-        .from("payments")
-        .insert({
-          amount: session.amount_total ? session.amount_total / 100 : 0,
-          name: session.metadata?.productName || "iPhone 14",
-          email: session.customer_details?.email || "",
-          payment_status: "paid",
-          payment_intent_id: session.payment_intent,
-          product_id: productId ? parseInt(productId) : 101, // Default to iPhone 14 product ID
-        });
-
-      if (paymentError) {
-        console.error("Error storing payment record:", paymentError);
-        throw new Error(`Error storing payment record: ${paymentError.message}`);
-      }
-      
-      console.log("Payment record created successfully");
     }
 
     return new Response(JSON.stringify({ received: true }), {
@@ -163,3 +151,81 @@ serve(async (req) => {
     );
   }
 });
+
+// Handler for checkout.session.completed event
+async function handleCheckoutSessionCompleted(session) {
+  console.log("Processing checkout.session.completed event:", session.id);
+  
+  try {
+    // Make sure this is for our specific product
+    const productId = session.metadata?.productId;
+    const userId = session.metadata?.userId || session.client_reference_id;
+    
+    // Store payment record for the purchase
+    const { error: paymentError } = await supabase
+      .from("payments")
+      .insert({
+        amount: session.amount_total ? session.amount_total / 100 : 0,
+        name: session.metadata?.productName || "Product",
+        email: session.customer_details?.email || "",
+        payment_status: "paid",
+        payment_intent_id: session.payment_intent,
+        product_id: productId ? parseInt(productId) : 101, // Default to iPhone 14 product ID
+        user_id: userId || "",
+      });
+
+    if (paymentError) {
+      console.error("Error storing payment record:", paymentError);
+      throw new Error(`Error storing payment record: ${paymentError.message}`);
+    }
+    
+    console.log("Payment record created successfully for session", session.id);
+  } catch (error) {
+    console.error("Error handling checkout.session.completed:", error);
+  }
+}
+
+// Handler for payment_intent.succeeded event
+async function handlePaymentIntentSucceeded(paymentIntent) {
+  console.log("Processing payment_intent.succeeded event:", paymentIntent.id);
+  
+  try {
+    // Update payment status if it exists
+    const { data, error } = await supabase
+      .from("payments")
+      .update({ payment_status: "succeeded" })
+      .eq("payment_intent_id", paymentIntent.id);
+    
+    if (error) {
+      console.error("Error updating payment record:", error);
+    } else {
+      console.log("Payment record updated successfully");
+    }
+  } catch (error) {
+    console.error("Error handling payment_intent.succeeded:", error);
+  }
+}
+
+// Handler for payment_intent.payment_failed event
+async function handlePaymentIntentFailed(paymentIntent) {
+  console.log("Processing payment_intent.payment_failed event:", paymentIntent.id);
+  
+  try {
+    // Update payment status if it exists
+    const { data, error } = await supabase
+      .from("payments")
+      .update({ 
+        payment_status: "failed",
+        error_message: paymentIntent.last_payment_error?.message || "Payment failed"
+      })
+      .eq("payment_intent_id", paymentIntent.id);
+    
+    if (error) {
+      console.error("Error updating payment record:", error);
+    } else {
+      console.log("Payment record updated successfully");
+    }
+  } catch (error) {
+    console.error("Error handling payment_intent.payment_failed:", error);
+  }
+}
