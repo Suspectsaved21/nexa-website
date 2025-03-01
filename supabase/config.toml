@@ -4,3 +4,5 @@ project_id = "ynxbcyuinyzlbsqgtcnd"
 verify_jwt = false
 [functions.webhook-handler]
 verify_jwt = false
+[functions.create-payment-intent]
+verify_jwt = false

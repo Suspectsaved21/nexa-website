@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { BuyNowButtonProps } from "@/types/checkout";
+import { LoadingSpinner } from "@/components/LoadingSpinner";
 
 export const BuyNowButton = ({ productName, productImage, price, priceId }: BuyNowButtonProps) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -37,6 +38,7 @@ export const BuyNowButton = ({ productName, productImage, price, priceId }: BuyN
           productId: 101, // iPhone 14 product ID
           successUrl: `${window.location.origin}/success`,
           cancelUrl: `${window.location.origin}/cancel`,
+          webhookUrl: "https://ynxbcyuinyzlbsqgtcnd.supabase.co/functions/v1/webhook-handler"
         },
       });
 
@@ -68,7 +70,11 @@ export const BuyNowButton = ({ productName, productImage, price, priceId }: BuyN
       variant={isLoading ? "loading" : "default"}
       className="w-full mt-4 bg-[#721244] hover:bg-[#5d0f37]"
     >
-      {isLoading ? "Processing..." : "Buy Now"}
+      {isLoading ? (
+        <>
+          <LoadingSpinner size="sm" className="mr-2" /> Processing...
+        </>
+      ) : "Buy Now"}
     </Button>
   );
 };
