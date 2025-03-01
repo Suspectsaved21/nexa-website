@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -15,12 +14,12 @@ import SearchResultsPage from "./pages/SearchResultsPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import CheckoutSuccessPage from "./pages/CheckoutSuccessPage";
 import CheckoutCancelPage from "./pages/CheckoutCancelPage";
+import SuccessPage from "./pages/SuccessPage";
 
-// Create a query client with custom error handling
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      retry: 2, // Increased retry count
+      retry: 2,
       refetchOnWindowFocus: false,
       staleTime: 5 * 60 * 1000,
     },
@@ -32,14 +31,9 @@ const queryClient = new QueryClient({
   },
 });
 
-// Global error handler function for debugging
 const handleQueryError = (error: unknown) => {
   console.error("Query error:", error);
 };
-
-// We'll use this in individual query components instead of global config
-// Example usage in components: 
-// useQuery({ queryKey: ['data'], queryFn: fetchData, onError: handleQueryError })
 
 const App = () => (
   <ErrorBoundary>
@@ -68,12 +62,11 @@ const App = () => (
                   </AuthGuard>
                 } 
               />
-              {/* Remove AuthGuard for success and cancel pages to ensure they're always accessible */}
               <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
               <Route path="/checkout/cancel" element={<CheckoutCancelPage />} />
+              <Route path="/success" element={<SuccessPage />} />
               <Route path="/auth" element={<AuthPage />} />
               <Route path="/search" element={<SearchResultsPage />} />
-              {/* Catch-all route to handle 404 errors by redirecting to home */}
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </Router>
