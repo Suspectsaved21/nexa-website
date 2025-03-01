@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { PaymentElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -10,11 +10,19 @@ export function CheckoutForm({ clientSecret }: { clientSecret: string }) {
   const elements = useElements();
   const [isProcessing, setIsProcessing] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [isReady, setIsReady] = useState(false);
+
+  useEffect(() => {
+    if (stripe && elements) {
+      setIsReady(true);
+    }
+  }, [stripe, elements]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!stripe || !elements) {
+      toast.error("Stripe has not been initialized yet");
       return;
     }
 
@@ -45,6 +53,15 @@ export function CheckoutForm({ clientSecret }: { clientSecret: string }) {
       setIsProcessing(false);
     }
   };
+
+  if (!isReady) {
+    return (
+      <div className="text-center p-4">
+        <LoadingSpinner />
+        <p className="mt-2 text-sm text-gray-500">Initializing payment form...</p>
+      </div>
+    );
+  }
 
   return (
     <form onSubmit={handleSubmit} className="mt-6">

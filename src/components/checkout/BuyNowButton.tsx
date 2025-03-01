@@ -37,7 +37,7 @@ export const BuyNowButton = ({ productName, productImage, price, priceId }: BuyN
           userId,
           productId: 101, // iPhone 14 product ID
           successUrl: `${window.location.origin}/success`,
-          cancelUrl: `${window.location.origin}/cancel`,
+          cancelUrl: `${window.location.origin}/checkout`,
           webhookUrl: "https://ynxbcyuinyzlbsqgtcnd.supabase.co/functions/v1/webhook-handler"
         },
       });

@@ -4,6 +4,8 @@ import { loadStripe } from "@stripe/stripe-js";
 import { CheckoutForm } from "./CheckoutForm";
 import { CartSummaryProps } from "@/types/checkout";
 import { BuyNowButton } from "./BuyNowButton";
+import { toast } from "sonner";
+import { useEffect } from "react";
 
 const stripePromise = loadStripe('pk_test_51OdAmJDm3zF6RmDdXlp6zMoSlOCHLFIDEaRgVu6eE3LNzpeGuYwYnxzaU8TjmcKLMEOBvrZUyH8lAHJvZcadgpkk00TRDtMw3g');
 
@@ -14,6 +16,12 @@ export const CartSummary = ({ items, clientSecret }: CartSummaryProps) => {
   const iphone14Item = items.find(item => 
     item.name.toLowerCase().includes("iphone 14") && item.product_id === 101
   );
+
+  useEffect(() => {
+    if (items.length > 0 && !clientSecret) {
+      console.log("Waiting for payment intent to be created...");
+    }
+  }, [items, clientSecret]);
 
   return (
     <div className="mt-6 p-4 bg-white rounded-lg shadow">
@@ -37,10 +45,15 @@ export const CartSummary = ({ items, clientSecret }: CartSummaryProps) => {
         </div>
       )}
 
-      {clientSecret && (
+      {clientSecret ? (
         <Elements stripe={stripePromise} options={{ clientSecret }}>
           <CheckoutForm clientSecret={clientSecret} />
         </Elements>
+      ) : (
+        <div className="text-center p-4">
+          <p className="text-gray-600 mb-2">Express checkout is recommended for a better experience.</p>
+          <p className="text-sm text-gray-500">The payment form is currently unavailable.</p>
+        </div>
       )}
     </div>
   );
