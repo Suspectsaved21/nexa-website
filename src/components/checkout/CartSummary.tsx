@@ -21,10 +21,10 @@ export const CartSummary = ({ items }: CartSummaryProps) => {
     setCheckoutError(null);
     
     try {
-      // Use the cart items directly without the priceId
+      // We'll use the mode where we provide the priceId directly
       const { data, error } = await supabase.functions.invoke('create-checkout-session', {
         body: { 
-          items,
+          priceId: 'prod_Rre9tctWLjCkLY', // Using the specific price ID
           returnUrl: window.location.origin
         }
       });

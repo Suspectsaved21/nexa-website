@@ -1,4 +1,3 @@
-
 export interface CartItem {
   id: string;
   product_id: number;
@@ -26,7 +25,7 @@ export interface CheckoutResponse {
 }
 
 export interface CheckoutRequestBody {
-  items: CartItemWithDetails[];
-  priceId?: string; // Making priceId optional
+  items?: CartItemWithDetails[];
+  priceId?: string;
   returnUrl: string;
 }
