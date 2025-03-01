@@ -30,8 +30,12 @@ export function CheckoutForm({ clientSecret }: { clientSecret: string }) {
       });
 
       if (error) {
-        setErrorMessage(error.message || "An unexpected error occurred.");
-        toast.error(error.message);
+        if (error.type === "card_error" || error.type === "validation_error") {
+          setErrorMessage(error.message || "An unexpected error occurred.");
+        } else {
+          setErrorMessage("An unexpected error occurred.");
+        }
+        toast.error(error.message || "Payment failed. Please try again.");
       }
     } catch (err) {
       console.error('Payment error:', err);
@@ -54,7 +58,7 @@ export function CheckoutForm({ clientSecret }: { clientSecret: string }) {
       
       <Button 
         type="submit"
-        disabled={!stripe || isProcessing}
+        disabled={!stripe || isProcessing || !clientSecret}
         className="w-full mt-4 bg-[#721244] hover:bg-[#5d0f37] flex items-center justify-center"
       >
         {isProcessing ? (

@@ -16,7 +16,14 @@ export const BuyNowButton = ({ productName, productImage, price, priceId }: BuyN
       
       // Get current user if logged in
       const { data: { user } } = await supabase.auth.getUser();
-      const userId = user?.id;
+      
+      if (!user) {
+        toast.error("Please log in to continue with checkout");
+        navigate("/auth");
+        return;
+      }
+      
+      const userId = user.id;
       
       console.log("Sending checkout request with:", { productName, productImage, price, priceId, userId });
       
@@ -35,16 +42,17 @@ export const BuyNowButton = ({ productName, productImage, price, priceId }: BuyN
 
       if (error) {
         console.error("Supabase function error:", error);
-        throw new Error(error.message);
+        throw new Error(error.message || "Failed to create checkout session");
       }
 
-      if (data?.url) {
-        console.log("Redirecting to Stripe checkout:", data.url);
-        window.location.href = data.url;
-      } else {
+      if (!data || !data.url) {
         console.error("No URL returned from checkout session", data);
         throw new Error("Failed to create checkout session");
       }
+
+      console.log("Redirecting to Stripe checkout:", data.url);
+      window.location.href = data.url;
+      
     } catch (error) {
       console.error("Checkout error:", error);
       toast.error("Failed to initiate checkout. Please try again.");
