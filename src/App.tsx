@@ -23,10 +23,14 @@ const queryClient = new QueryClient({
       retry: 2, // Increased retry count
       refetchOnWindowFocus: false,
       staleTime: 5 * 60 * 1000,
-      // Add more strict error handling
-      onError: (error) => {
-        console.error("Query error:", error);
-      }
+    },
+  },
+  logger: {
+    log: console.log,
+    warn: console.warn,
+    // Override the error method to add custom handling
+    error: (error) => {
+      console.error("Query error:", error);
     },
   },
 });
