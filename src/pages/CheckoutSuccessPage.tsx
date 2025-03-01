@@ -1,14 +1,18 @@
 
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { MarketHeader } from "@/components/market/MarketHeader";
 import { MarketFooter } from "@/components/market/MarketFooter";
 import { Button } from "@/components/ui/button";
 import { CheckCircle } from "lucide-react";
 import { toast } from "sonner";
+import { useCart } from "@/hooks/useCart";
 
 const CheckoutSuccessPage = () => {
   const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { getCartTotal } = useCart();
 
   useEffect(() => {
     // Clear the cart on successful checkout
@@ -18,8 +22,14 @@ const CheckoutSuccessPage = () => {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <MarketHeader />
-      <main className="flex-grow flex items-center justify-center py-16 px-4">
+      <MarketHeader 
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        isMenuOpen={isMenuOpen}
+        setIsMenuOpen={setIsMenuOpen}
+        totalCartCount={getCartTotal()}
+      />
+      <main className="flex-grow flex items-center justify-center py-16 px-4 mt-16">
         <div className="max-w-md w-full bg-white p-8 rounded-lg shadow-lg text-center">
           <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
           <h1 className="text-2xl font-bold text-gray-800 mb-2">Payment Successful!</h1>
