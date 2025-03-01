@@ -8,6 +8,7 @@ import { LoadingSpinner } from "@/components/LoadingSpinner";
 
 export const CartSummary = ({ items }: CartSummaryProps) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
   const total = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
   const handleCheckout = async () => {
@@ -17,6 +18,8 @@ export const CartSummary = ({ items }: CartSummaryProps) => {
     }
 
     setIsLoading(true);
+    setCheckoutError(null);
+    
     try {
       // Use the provided price ID for the checkout session
       const { data, error } = await supabase.functions.invoke('create-checkout-session', {
@@ -34,12 +37,17 @@ export const CartSummary = ({ items }: CartSummaryProps) => {
       if (data?.url) {
         // Redirect to Stripe checkout
         window.location.href = data.url;
+      } else if (data?.error) {
+        setCheckoutError(data.error);
+        toast.error(data.error);
       } else {
         throw new Error('No checkout URL returned');
       }
     } catch (error) {
       console.error('Checkout error:', error);
-      toast.error('Unable to proceed to checkout. Please try again later.');
+      const errorMessage = error.message || 'Unable to proceed to checkout. Please try again later.';
+      setCheckoutError(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -53,6 +61,12 @@ export const CartSummary = ({ items }: CartSummaryProps) => {
           ${total.toFixed(2)}
         </span>
       </div>
+
+      {checkoutError && (
+        <div className="my-4 p-3 bg-red-50 text-red-700 rounded-md text-sm">
+          Error: {checkoutError}
+        </div>
+      )}
 
       <Button 
         onClick={handleCheckout}
