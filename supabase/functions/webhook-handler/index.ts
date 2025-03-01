@@ -24,8 +24,43 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  // For direct browser access, show a simple message instead of trying to process as webhook
+  if (req.method === "GET") {
+    return new Response(
+      JSON.stringify({ 
+        message: "This is a Stripe webhook endpoint. Please use POST requests with proper Stripe signatures." 
+      }),
+      { 
+        status: 200, 
+        headers: { ...corsHeaders, "Content-Type": "application/json" } 
+      }
+    );
+  }
+
   try {
+    // Only try to parse body for POST requests
+    if (req.method !== "POST") {
+      return new Response(
+        JSON.stringify({ error: "Method not allowed. This endpoint only accepts POST requests." }),
+        {
+          status: 405,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
+    }
+
+    // Check if request has a body
     const body = await req.text();
+    if (!body || body.trim() === '') {
+      return new Response(
+        JSON.stringify({ error: "Empty request body" }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
+    }
+
     const signature = req.headers.get("stripe-signature");
     console.log("Received webhook with signature:", signature);
     
@@ -55,8 +90,19 @@ serve(async (req) => {
       }
     } else {
       // For testing, if no signature or secret, parse the body directly
-      console.log("No signature or webhook secret provided, parsing body directly");
-      webhookEvent = JSON.parse(body);
+      try {
+        console.log("No signature or webhook secret provided, trying to parse body directly");
+        webhookEvent = JSON.parse(body);
+      } catch (parseError) {
+        console.error(`JSON parse error: ${parseError.message}`);
+        return new Response(
+          JSON.stringify({ error: `Invalid JSON: ${parseError.message}` }),
+          {
+            status: 400,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          }
+        );
+      }
     }
 
     console.log(`Processing webhook event: ${webhookEvent.type}`);
