@@ -32,7 +32,7 @@ export const BuyNowButton = ({ productName, productImage, price, priceId }: BuyN
           productName,
           productImage,
           price,
-          priceId: priceId || "prod_RrIPJKAbKeCOtv", // Default to iPhone 14 price ID
+          priceId: priceId || "price_1OpRQyDm3zF6RmDdQFbEKVzJ", // Default to iPhone 14 price ID
           userId,
           productId: 101, // iPhone 14 product ID
           successUrl: `${window.location.origin}/success`,
@@ -65,6 +65,7 @@ export const BuyNowButton = ({ productName, productImage, price, priceId }: BuyN
     <Button
       onClick={handleBuyNow}
       disabled={isLoading}
+      variant={isLoading ? "loading" : "default"}
       className="w-full mt-4 bg-[#721244] hover:bg-[#5d0f37]"
     >
       {isLoading ? "Processing..." : "Buy Now"}

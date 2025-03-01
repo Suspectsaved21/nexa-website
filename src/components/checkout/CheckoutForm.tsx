@@ -59,6 +59,7 @@ export function CheckoutForm({ clientSecret }: { clientSecret: string }) {
       <Button 
         type="submit"
         disabled={!stripe || isProcessing || !clientSecret}
+        variant={isProcessing ? "loading" : "default"}
         className="w-full mt-4 bg-[#721244] hover:bg-[#5d0f37] flex items-center justify-center"
       >
         {isProcessing ? (
@@ -71,4 +72,4 @@ export function CheckoutForm({ clientSecret }: { clientSecret: string }) {
       </Button>
     </form>
   );
-}
+};

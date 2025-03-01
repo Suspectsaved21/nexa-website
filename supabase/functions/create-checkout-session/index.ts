@@ -20,9 +20,54 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  // Return informational message for GET requests
+  if (req.method === "GET") {
+    return new Response(
+      JSON.stringify({ message: "This is a checkout endpoint. Please use POST requests." }),
+      {
+        status: 200,
+        headers: {
+          ...corsHeaders,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+  }
+
   try {
+    // Check if the request method is POST
+    if (req.method !== "POST") {
+      return new Response(
+        JSON.stringify({ error: "Method not allowed. Use POST requests." }),
+        {
+          status: 405,
+          headers: {
+            ...corsHeaders,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    }
+
     // Get request body
-    const { productName, productImage, price, priceId, userId, productId, successUrl, cancelUrl } = await req.json();
+    let requestData;
+    try {
+      requestData = await req.json();
+    } catch (e) {
+      console.error("Error parsing request body:", e);
+      return new Response(
+        JSON.stringify({ error: "Invalid request body" }),
+        {
+          status: 400,
+          headers: {
+            ...corsHeaders,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    }
+
+    const { productName, productImage, price, priceId, userId, productId, successUrl, cancelUrl } = requestData;
     
     console.log("Creating checkout session for:", { productName, price, priceId, userId, productId });
 
@@ -48,13 +93,16 @@ serve(async (req) => {
       metadata: {
         productName,
         productId: productId?.toString() || "101", // Default to iPhone product ID if not provided
+        userId: userId || "",
       },
       client_reference_id: userId, // Add user ID as reference if available
     });
 
+    console.log("Checkout session created:", session.id);
+
     // Return the session URL
     return new Response(
-      JSON.stringify({ url: session.url }),
+      JSON.stringify({ url: session.url, sessionId: session.id }),
       {
         status: 200,
         headers: {
