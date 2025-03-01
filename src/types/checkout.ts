@@ -18,5 +18,9 @@ export interface CartItemProps extends CartItemWithDetails {
 
 export interface CartSummaryProps {
   items: CartItemWithDetails[];
-  clientSecret: string;
+}
+
+export interface CheckoutResponse {
+  url: string;
+  error?: string;
 }

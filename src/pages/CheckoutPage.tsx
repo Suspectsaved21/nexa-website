@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -9,15 +8,7 @@ import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { supabase } from "@/integrations/supabase/client";
 import { CartItem } from "@/components/checkout/CartItem";
 import { CartSummary } from "@/components/checkout/CartSummary";
-
-interface CartItemWithDetails {
-  id: string;
-  product_id: number;
-  quantity: number;
-  name: string;
-  price: number;
-  image: string;
-}
+import { CartItemWithDetails } from "@/types/checkout";
 
 const CheckoutPage = () => {
   const { t } = useLanguage();
