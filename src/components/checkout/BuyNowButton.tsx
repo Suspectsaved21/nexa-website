@@ -30,6 +30,7 @@ export const BuyNowButton = ({ productName, productImage, price, priceId }: BuyN
       
       const { data, error } = await supabase.functions.invoke("create-checkout-session", {
         body: {
+          mode: "payment",
           productName,
           productImage,
           price,

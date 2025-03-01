@@ -19,6 +19,7 @@ export interface CartItemProps extends CartItemWithDetails {
 export interface CartSummaryProps {
   items: CartItemWithDetails[];
   clientSecret: string;
+  checkoutUrl?: string | null;
 }
 
 export interface PaymentRecord {

@@ -25,7 +25,7 @@ const CheckoutPage = () => {
   }, [cartItems]);
 
   // Initialize checkout hook
-  const { isLoading, user, clientSecret } = useCheckout(itemsWithDetails);
+  const { isLoading, user, clientSecret, checkoutUrl } = useCheckout(itemsWithDetails);
 
   // Show auth guard if user is not logged in
   if (!isLoading && !user) {
@@ -85,6 +85,7 @@ const CheckoutPage = () => {
           <CartSummary 
             items={itemsWithDetails}
             clientSecret={clientSecret}
+            checkoutUrl={checkoutUrl}
           />
         </div>
       )}
