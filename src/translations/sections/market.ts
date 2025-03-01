@@ -18,6 +18,10 @@ export const market = {
     searchPlaceholder: "Search products...",
     addToCart: "Add to Cart",
     footerText: "© 2025 Nexa. All rights reserved.",
+    signOut: "Sign Out",
+    nexaSpecials: "Nexa Specials",
+    welcome_to_nexa: "Welcome to Nexa",
+    "Your one e-shop online commerce for everything!": "Your one-stop online shop for everything!"
   },
   fr: {
     nexa: "Nexa",
@@ -37,5 +41,9 @@ export const market = {
     searchPlaceholder: "Rechercher des produits...",
     addToCart: "Ajouter au panier",
     footerText: "© 2025 Nexa. Tous droits réservés.",
+    signOut: "Déconnexion",
+    nexaSpecials: "Offres Spéciales Nexa",
+    welcome_to_nexa: "Bienvenue chez Nexa",
+    "Your one e-shop online commerce for everything!": "Votre boutique en ligne pour tout!"
   },
 };

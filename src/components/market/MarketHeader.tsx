@@ -34,11 +34,18 @@ export const MarketHeader = ({
   };
 
   const handleSignOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      toast.error("Error signing out");
-    } else {
-      navigate("/auth");
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        toast.error("Error signing out");
+      } else {
+        toast.success("Successfully signed out");
+        // Use navigate instead of directly setting window.location
+        navigate("/auth");
+      }
+    } catch (error) {
+      console.error("Sign out error:", error);
+      toast.error("Error during sign out process");
     }
   };
 
@@ -106,6 +113,13 @@ export const MarketHeader = ({
             >
               <Menu className="h-6 w-6" />
             </button>
+            
+            <button 
+              onClick={handleSignOut}
+              className="hidden md:flex text-sm hover:text-gray-200 transition-colors"
+            >
+              {t("signOut") || "Sign Out"}
+            </button>
           </div>
         </div>
 
@@ -128,6 +142,14 @@ export const MarketHeader = ({
                   {t("contact")}
                 </Link>
               </li>
+              <li>
+                <button className="block py-2 w-full text-left" onClick={() => {
+                  handleSignOut();
+                  setIsMenuOpen(false);
+                }}>
+                  {t("signOut") || "Sign Out"}
+                </button>
+              </li>
             </ul>
           </nav>
         )}
@@ -137,4 +159,3 @@ export const MarketHeader = ({
 };
 
 export default MarketHeader;
-

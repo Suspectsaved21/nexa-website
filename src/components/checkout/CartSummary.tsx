@@ -55,6 +55,8 @@ export const CartSummary = ({ items }: CartSummaryProps) => {
 
       // Redirect to the Stripe Checkout URL
       if (data.url) {
+        // Store the cart items in sessionStorage before redirecting
+        sessionStorage.setItem('pending_checkout_items', JSON.stringify(items));
         window.location.href = data.url;
       } else {
         throw new Error('No checkout URL returned');

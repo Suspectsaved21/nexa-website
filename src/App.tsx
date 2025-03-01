@@ -16,12 +16,17 @@ import SearchResultsPage from "./pages/SearchResultsPage";
 import CheckoutSuccessPage from "./pages/CheckoutSuccessPage";
 import CheckoutCancelPage from "./pages/CheckoutCancelPage";
 
+// Create a new query client with more generous defaults for this app
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      retry: 1,
+      retry: 2, // Increased retry count
       refetchOnWindowFocus: false,
       staleTime: 5 * 60 * 1000,
+      // Add more strict error handling
+      onError: (error) => {
+        console.error("Query error:", error);
+      }
     },
   },
 });
@@ -71,7 +76,7 @@ const App = () => (
               />
               <Route path="/auth" element={<AuthPage />} />
               <Route path="/search" element={<SearchResultsPage />} />
-              {/* Catch-all route to handle 404 errors */}
+              {/* Catch-all route to handle 404 errors by redirecting to home */}
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </Router>
